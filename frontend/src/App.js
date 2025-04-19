@@ -183,6 +183,7 @@ export default function App() {
             ref={inputRef}
             autoFocus
             value={input}
+            autoCapitalize="none"
             onChange={e => setInput(e.target.value)}
           />
         </form>

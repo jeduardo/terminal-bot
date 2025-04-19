@@ -23,5 +23,4 @@ html,
   outline: none;
   font-family: monospace;
   width: calc(100% - 50px);
-  text-transform: lowercase;
 }
