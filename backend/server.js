@@ -56,7 +56,7 @@ app.post('/api/chat', async (req, res) => {
     }
     res.end()
   } catch (err) {
-    console.error('AI request failed', err)
+    console.error('🚨 AI request failed', err)
     res.status(500).send('AI request failed')
   }
 })

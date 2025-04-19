@@ -22,7 +22,13 @@ export default function App() {
 
     const bootMsgs = [
       'Initializing system...',
+      'SYSBOOT complete',
+      'Kernel loaded',
+      'COM1: Ready',
       'Loading modules...',
+      'HIMEM.SYS loaded',
+      'Extended memory detected',
+      '640K conventional memory available',
       'Ready.'
     ]
 
