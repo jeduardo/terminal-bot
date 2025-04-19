@@ -56,21 +56,25 @@ A simulation of a broken operating system that uses Google Gemini to generate re
 
 ### Service
 
-1. Create the service location:
+1. Create the service location and service user:
    ```shell
-   mkdir /srv/terminal-bot
+   sudo groupadd --system terminal-bot
+   sudo useradd --system -g terminal-bot terminal-bot
+   sudo mkdir /srv/terminal-bot
    ```
 
 2. Build the frontend assets and copy them to the service location:
    ```bash
    cd frontend
+   npm install
    npm run build
-   mv build /srv/terminal-bot/public/
+   sudo mv build /srv/terminal-bot/public/
+   cd ..
    ```
 
 2. Set up environment variables:
    ```bash
-   cp .env.example /srv/terminal-bot/.env.production
+   sudo cp backend/.env.example /srv/terminal-bot/.env.production
    # Edit .env.production with production settings
    ```
 
@@ -83,17 +87,23 @@ A simulation of a broken operating system that uses Google Gemini to generate re
 
 3. Prepare the service location
    ```bash
-   cp backend/{package.json,server.js} /srv/terminal-bot/
+   sudo cp backend/{package.json,server.js} /srv/terminal-bot/
    cd /srv/terminal-bot
-   npm install
+   sudo npm install
+   cd -
    ```
 
 5. Add the systemd service file:
    ```bash
-   cp deployment/terminal-bot.service /etc/systemd/system/
-   systemctl enable terminal-bot
-   systemctl start terminal-bot
+   sudo cp deployment/terminal-bot.service /etc/systemd/system/
+   sudo systemctl enable terminal-bot
+   sudo systemctl start terminal-bot
    ```
+
+6. Fix ownership:
+   ```bash
+   sudo chown terminal-bot:terminal-bot /srv/terminal-bot/ -R
+   ````
 
 ### Docker
 
