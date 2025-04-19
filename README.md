@@ -105,6 +105,23 @@ A simulation of a broken operating system that uses Google Gemini to generate re
    sudo chown terminal-bot:terminal-bot /srv/terminal-bot/ -R
    ````
 
+7. (Optional) Add nginx passthrough if necessary:
+   ```conf
+   # rest of config
+    location / {
+        proxy_set_header   Host                $host;
+        proxy_set_header   X-Real-IP           $remote_addr;
+        proxy_set_header   X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto   $scheme;
+        proxy_set_header   X-Forwarded-Host    $host;
+        proxy_set_header   X-Forwarded-Port    $server_port;
+
+        proxy_pass http://127.0.0.1:8080/;
+   }
+   # rest of config
+
+   ```
+
 ### Docker
 
 1. **Build the Docker image**
