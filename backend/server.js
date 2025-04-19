@@ -51,7 +51,6 @@ app.post('/api/chat', async (req, res) => {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8')
 
     for await (const token of result.textStream) {
-      console.log(token)
       res.write(token)
     }
     res.end()

@@ -15,7 +15,26 @@ export default function App() {
     terminalEnd.current?.scrollIntoView({ behavior: 'smooth' })
   }, [lines])
 
-  // One‑time, streamed boot sequence
+  // Display all messages as streaming messages
+  async function streamMessage(message, speed = 30) {
+    let messageIdx
+    setLines(prev => {
+      messageIdx = prev.length
+      return [...prev, '']
+    })
+
+    for (const ch of message) {
+      await new Promise(r => setTimeout(r, speed))
+      setLines(prev => {
+        const copy = [...prev]
+        copy[messageIdx] += ch
+        return copy
+      })
+    }
+    return messageIdx
+  }
+
+  // Modified boot sequence
   useEffect(() => {
     if (hasBooted.current) return
     hasBooted.current = true
@@ -34,19 +53,7 @@ export default function App() {
 
     ;(async () => {
       for (const msg of bootMsgs) {
-        let idx
-        // add empty line and capture its index
-        setLines(prev => { idx = prev.length; return [...prev, ''] })
-        // type it out
-        for (const ch of msg) {
-          await new Promise(r => setTimeout(r, 30))
-          setLines(prev => {
-            const copy = [...prev]
-            copy[idx] += ch
-            return copy
-          })
-        }
-        // pause before next
+        await streamMessage(msg)
         await new Promise(r => setTimeout(r, 500))
       }
       setBootComplete(true)
@@ -69,6 +76,7 @@ export default function App() {
     }
   }, [])
 
+  // Modified AI response handling
   async function streamAIResponse(message) {
     // 1) insert an empty loader line
     let loaderIdx
@@ -101,65 +109,48 @@ export default function App() {
       setLines(prev => {
         const copy = [...prev]
         copy.splice(loaderIdx, 1)
-        return [...copy, 'Error: Connection failed - Please check your network connection']
+        return copy
       })
+      await streamMessage('Error: Connection failed - Please check your network connection')
       return
     }
   
     if (!res.ok) {
-      setLines(prev => [...prev, `Error: Server error (${res.status}) - Please try again later`])
       clearInterval(loaderInterval)
+      setLines(prev => {
+        const copy = [...prev]
+        copy.splice(loaderIdx, 1)
+        return copy
+      })
+      await streamMessage(`Error: Server error (${res.status}) - Please try again later`)
       return
     }
   
-    // 4) once fetch returns, stop the loader and remove its line
+    // 4) process the response
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder('utf-8')
+    let fullResponse = ''
+
+    // Collect the entire response
+    while (true) {
+      const { value, done } = await reader.read()
+      if (done) break
+      fullResponse += decoder.decode(value, { stream: true })
+    }
+
+    // Clear the loader
     clearInterval(loaderInterval)
     setLines(prev => {
       const copy = [...prev]
       copy.splice(loaderIdx, 1)
       return copy
     })
-  
-    // 5) add the AI’s line and stream tokens as before
-    const reader = res.body.getReader()
-    const decoder = new TextDecoder('utf-8')
-    let buffer = ''
-        
-    while (true) {
-      const { value, done } = await reader.read()
-      if (done) {
-        // Process any remaining content in the buffer
-        if (buffer) {
-          setLines(prev => [...prev, buffer])
-        }
-        break
-      }
 
-      buffer += decoder.decode(value, { stream: true })
-      
-      // Process complete lines when we find newline tokens
-      while (buffer.includes('|NEWLINE|')) {
-        const [line, ...rest] = buffer.split('|NEWLINE|')
-        buffer = rest.join('|NEWLINE|')
-        
-        // Add the completed line
-        setLines(prev => [...prev, line])
-        
-        // Start a new line
-        await new Promise(r => setTimeout(r, 30))
-      }
-      
-      // Update the current incomplete line
-      if (buffer) {
-        setLines(prev => {
-          const copy = [...prev]
-          if (copy.length === 0 || copy[copy.length - 1].includes('|NEWLINE|')) {
-            return [...copy, buffer]
-          }
-          copy[copy.length - 1] = buffer
-          return copy
-        })
-        await new Promise(r => setTimeout(r, 30))
+    // Split by newline tokens and stream each line
+    const lines = fullResponse.split('|NEWLINE|')
+    for (const line of lines) {
+      if (line.trim()) {
+        await streamMessage(line)
       }
     }
   }
