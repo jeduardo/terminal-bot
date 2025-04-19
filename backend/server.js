@@ -8,21 +8,24 @@ import { streamText } from 'ai'
 
 dotenv.config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env' })
 
-const MODEL  = `${process.env.GOOGLE_GENERATIVE_AI_MODEL}`
+const MODEL  = `${process.env.MODEL_NAME}`
 const PROMPT = `${process.env.MODEL_PROMPT}`.replaceAll("\n", " ");
 const FRONTEND_DIR = `${process.env.FRONTEND_DIR}`
-
+const TEMPERATURE = parseFloat(process.env.MODEL_TEMPERATURE)
+const MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS)
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
-console.log(`🤖 Server using model ${MODEL}`)
-console.log(`💬 Server using prompt: "${PROMPT}"`)
+console.log(`🤖 Model name: ${MODEL}`)
+console.log(`💬 Model prompt: "${PROMPT}"`)
+console.log(`🌡️ Model temperature: "${TEMPERATURE}"`)
+console.log(`📓 Max response tokens: "${MAX_TOKENS}"`)
 
 if (FRONTEND_DIR !== 'undefined') {
   app.use(express.static(FRONTEND_DIR))
-  console.log(`🌎 Frontend app served from "${FRONTEND_DIR}"`)
+  console.log(`🌎 Frontend app served from: "${FRONTEND_DIR}"`)
 }
 
 // Middleware to log requests
@@ -37,6 +40,8 @@ app.post('/api/chat', async (req, res) => {
   try {
     const result = streamText({
       model: google(MODEL),
+      temperature: TEMPERATURE,
+      maxTokens: MAX_TOKENS,
       messages: [
       { role: 'system',  content: PROMPT},
       { role: 'user', content: message }

@@ -8,6 +8,7 @@ export default function App() {
   const [isStreaming, setIsStreaming] = useState(false)
   const hasBooted = useRef(false)
   const terminalEnd = useRef(null)
+  const inputRef = useRef(null)
 
   // Auto‑scroll on new lines
   useEffect(() => {
@@ -44,6 +45,22 @@ export default function App() {
       }
       setBootComplete(true)
     })()
+  }, [])
+
+  // Add focus handler effect
+  useEffect(() => {
+    const handleFocus = () => {
+      inputRef.current?.focus()
+    }
+
+    window.addEventListener('focus', handleFocus)
+    document.addEventListener('click', handleFocus)
+
+    // Cleanup listeners on unmount
+    return () => {
+      window.removeEventListener('focus', handleFocus)
+      document.removeEventListener('click', handleFocus)
+    }
   }, [])
 
   async function streamAIResponse(message) {
@@ -166,6 +183,7 @@ export default function App() {
         <form onSubmit={handleSubmit}>
           <span>C:\&gt; </span>
           <input
+            ref={inputRef}
             autoFocus
             value={input}
             onChange={e => setInput(e.target.value)}
