@@ -2,6 +2,8 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import morgan from 'morgan'
+
 
 import { google } from '@ai-sdk/google'
 import { streamText } from 'ai'
@@ -15,6 +17,7 @@ const TEMPERATURE = parseFloat(process.env.MODEL_TEMPERATURE)
 const MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS)
 
 const app = express()
+app.use(morgan('combined'))
 app.use(cors())
 app.use(express.json())
 
@@ -27,12 +30,6 @@ if (FRONTEND_DIR !== 'undefined') {
   app.use(express.static(FRONTEND_DIR))
   console.log(`🌎 Frontend app served from: "${FRONTEND_DIR}"`)
 }
-
-// Middleware to log requests
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
-  next()
-})
 
 app.post('/api/chat', async (req, res) => {
   const { message } = req.body
