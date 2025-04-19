@@ -1,0 +1,14 @@
+[Unit]
+Description=Terminal Bot Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/srv/terminal-bot
+ExecStart=/usr/bin/node server.js
+Environment=NODE_ENV=production
+Restart=on-failure
+User=terminal-bot
+
+[Install]
+WantedBy=multi-user.target

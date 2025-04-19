@@ -1,0 +1,27 @@
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: black;
+  color: lightgreen;
+  font-family: monospace;
+}
+
+.terminal {
+  padding: 10px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.terminal input {
+  background: black;
+  color: lightgreen;
+  border: none;
+  outline: none;
+  font-family: monospace;
+  width: calc(100% - 50px);
+  /* Add this line to make input fill width minus prompt */
+}
