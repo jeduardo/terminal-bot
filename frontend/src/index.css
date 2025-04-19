@@ -23,5 +23,5 @@ html,
   outline: none;
   font-family: monospace;
   width: calc(100% - 50px);
-  /* Add this line to make input fill width minus prompt */
+  text-transform: lowercase;
 }
