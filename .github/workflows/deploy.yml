@@ -25,6 +25,11 @@ jobs:
           npm ci
           npm run build
 
+      - name: Build Backend
+        working-directory: backend
+        run: |
+          npm ci --omit=dev
+
       - name: Prepare Deploy Package
         run: |
           mkdir -p deploy
@@ -32,8 +37,8 @@ jobs:
           cp backend/package.json deploy/
           cp backend/server.js deploy/
           cp backend/.env.example deploy/.env.production
-          cd backend
-          npm ci --omit=dev
+          cp -r backend/node_modules deploy/
+          cp -r backend/package.json deploy/
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
