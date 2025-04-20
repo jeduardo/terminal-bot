@@ -31,12 +31,14 @@ jobs:
           npm ci --omit=dev
 
       - name: Prepare Deploy Package
+        env:
+          DEPLOY_ENV: ${{ secrets.DEPLOY_ENV }}
         run: |
           mkdir -p deploy
           cp -r frontend/build deploy/public
           cp backend/package.json deploy/
           cp backend/server.js deploy/
-          cp backend/.env.example deploy/.env.production
+          cp backend/.env.example deploy/.env.$DEPLOY_ENV
           cp -r backend/node_modules deploy/
           cp -r backend/package.json deploy/
 
@@ -51,18 +53,24 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_SERVICE: ${{ secrets.DEPLOY_SERVICE }}
+          DEPLOY_ENV: ${{ secrets.DEPLOY_ENV }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           # Stop the service
-          ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST 'sudo systemctl stop terminal-bot'
+          ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "sudo systemctl stop $DEPLOY_SERVICE"
+
+          # Remove old files
+          ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "rm -rf $DEPLOY_PATH/*"
 
           # Copy files
-          scp -P $DEPLOY_PORT -r deploy/* $DEPLOY_USER@$DEPLOY_HOST:/srv/terminal-bot/
+          scp -P $DEPLOY_PORT -r deploy/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
           # Update API key and permissions
           ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "
-            cd /srv/terminal-bot && \
-            sudo sed -i 's/YOUR_API_KEY/$GOOGLE_API_KEY/' .env.production && \
-            sudo chown terminal-bot:terminal-bot /srv/terminal-bot -R && \
-            sudo systemctl start terminal-bot
+            cd $DEPLOY_PATH && \
+            sudo sed -i 's/YOUR_API_KEY/$GOOGLE_API_KEY/' .env.$DEPLOY_ENV && \
+            sudo chown $DEPLOY_USER:$DEPLOY_USER $DEPLOY_PATH -R && \
+            sudo systemctl start $DEPLOY_SERVICE
           "
