@@ -17,17 +17,18 @@ export default function App() {
 
   // Display all messages as streaming messages
   async function streamMessage(message, speed = 30) {
-    let messageIdx
-    setLines(prev => {
-      messageIdx = prev.length
-      return [...prev, '']
+    const messageIdx = await new Promise(resolve => {
+      setLines(prev => {
+        resolve(prev.length)
+        return [...prev, '']
+      })
     })
 
     for (const ch of message) {
       await new Promise(r => setTimeout(r, speed))
       setLines(prev => {
         const copy = [...prev]
-        copy[messageIdx] += ch
+        copy[messageIdx] = (copy[messageIdx] ?? '') + ch
         return copy
       })
     }
