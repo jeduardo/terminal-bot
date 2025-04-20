@@ -25,11 +25,6 @@ jobs:
           npm ci
           npm run build
 
-      - name: Build Backend
-        working-directory: backend
-        run: |
-          npm ci --omit=dev
-
       - name: Prepare Deploy Package
         env:
           DEPLOY_ENV: ${{ secrets.DEPLOY_ENV }}
@@ -39,7 +34,6 @@ jobs:
           cp backend/package.json deploy/
           cp backend/server.js deploy/
           cp backend/.env.example deploy/.env.$DEPLOY_ENV
-          cp -r backend/node_modules deploy/
           cp -r backend/package.json deploy/
 
       - name: Install SSH Key
@@ -67,10 +61,11 @@ jobs:
           # Copy files
           scp -P $DEPLOY_PORT -r deploy/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
-          # Update API key and permissions
+          # Update API key and permissions, install dependencies, and start the service
           ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "
-            cd $DEPLOY_PATH && \
-            sudo sed -i 's/YOUR_API_KEY/$GOOGLE_API_KEY/' .env.$DEPLOY_ENV && \
             sudo chown $DEPLOY_USER:$DEPLOY_USER $DEPLOY_PATH -R && \
+            cd $DEPLOY_PATH && \
+            sed -i 's/YOUR_API_KEY/$GOOGLE_API_KEY/' .env.$DEPLOY_ENV && \
+            npm ci --omit=dev && \
             sudo systemctl start $DEPLOY_SERVICE
           "
