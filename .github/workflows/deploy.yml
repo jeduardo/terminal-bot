@@ -35,6 +35,7 @@ jobs:
           cp backend/server.js deploy/
           cp backend/.env.example deploy/.env.$DEPLOY_ENV
           cp -r backend/package.json deploy/
+          cp -r backend/package-lock.json deploy/
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
