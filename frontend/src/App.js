@@ -1,4 +1,3 @@
-// src/App.js
 import { useState, useRef, useEffect } from 'react'
 
 export default function App() {
