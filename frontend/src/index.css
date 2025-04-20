@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'FSEX300';
+  src: url('fonts/fsex.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body,
 html,
 #root {
@@ -6,7 +13,8 @@ html,
   height: 100%;
   background: black;
   color: lightgreen;
-  font-family: monospace;
+  font-family: 'FSEX300', monospace;
+  font-size: 1rem;
 }
 
 .terminal {
@@ -17,10 +25,11 @@ html,
 }
 
 .terminal input {
+  font-size: 1rem;
+  font-family: 'FSEX300', monospace;
   background: black;
   color: lightgreen;
   border: none;
   outline: none;
-  font-family: monospace;
-  width: calc(100% - 50px);
+  width: calc(100% - 55px);
 }
