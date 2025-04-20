@@ -11,7 +11,7 @@ A simulation of a broken operating system that uses Google Gemini to generate re
 
 ### Prerequisites
 
-- Node.js (v23+)
+- Node.js (v20+)
 - npm
 - A [Gemini API Key](https://aistudio.google.com/app/apikey)
 

@@ -9,7 +9,7 @@ This is the backend service for **Terminal Bot**, a Node.js project designed to 
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) >= 23.x
+- [Node.js](https://nodejs.org/) >= 20.x
 - [npm](https://www.npmjs.com/) >= 10.x
 
 ## Configuration

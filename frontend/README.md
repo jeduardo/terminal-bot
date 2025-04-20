@@ -12,7 +12,7 @@ This is the React-based frontend for the Terminal Bot project. It provides a use
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (version 23 or higher recommended)
+- [Node.js](https://nodejs.org/) (version 20 or higher recommended)
 - [npm](https://www.npmjs.com/)
 
 ### Development Server
