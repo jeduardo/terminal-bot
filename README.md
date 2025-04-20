@@ -58,8 +58,11 @@ A simulation of a broken operating system that uses Google Gemini to generate re
 
 1. Create the service location and service user:
    ```shell
+   # Create user
    sudo groupadd --system terminal-bot
    sudo useradd --system -g terminal-bot terminal-bot
+   sudo usermod -d /srv/terminal-bot terminal-bot
+   sudo usermod --shell /bin/bash terminal-bot
    sudo mkdir /srv/terminal-bot
    ```
 

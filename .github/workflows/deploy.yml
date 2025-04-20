@@ -1,0 +1,62 @@
+name: Deploy Terminal Bot
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+          cache: "npm"
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Prepare Deploy Package
+        run: |
+          mkdir -p deploy
+          cp -r frontend/build deploy/public
+          cp backend/package.json deploy/
+          cp backend/server.js deploy/
+          cp backend/.env.example deploy/.env.production
+          cd backend
+          npm ci --omit=dev
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Deploy to Server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+        run: |
+          # Stop the service
+          ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST 'sudo systemctl stop terminal-bot'
+
+          # Copy files
+          scp -P $DEPLOY_PORT -r deploy/* $DEPLOY_USER@$DEPLOY_HOST:/srv/terminal-bot/
+
+          # Update API key and permissions
+          ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "
+            cd /srv/terminal-bot && \
+            sudo sed -i 's/YOUR_API_KEY/$GOOGLE_API_KEY/' .env.production && \
+            sudo chown terminal-bot:terminal-bot /srv/terminal-bot -R && \
+            sudo systemctl start terminal-bot
+          "
