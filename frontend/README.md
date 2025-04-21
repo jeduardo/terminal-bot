@@ -51,6 +51,8 @@ The production assets will be present under the `build/` directory.
 
 The frontend uses the font [Fixedsys Excelsior](https://github.com/MARTYR-X-LTD/fixedsys-excelsior), in [WOFF2](https://en.wikipedia.org/wiki/Web_Open_Font_Format).
 
+The CRT effect is from [this blog post from Alec Lownes](https://aleclownes.com/2017/02/01/crt-display.html)l
+
 ## License
 
 MIT
