@@ -46,6 +46,7 @@ app.get('/api/boot', async (_, res) => {
       temperature: TEMPERATURE,
       maxTokens: MAX_TOKENS,
       schema: RESPONSE_SCHEMA,
+      maxRetries: 5,
       prompt: BOOT_PROMPT,
     })    
     res.status(200).send(object)
@@ -64,6 +65,7 @@ app.post('/api/system', async (req, res) => {
       temperature: TEMPERATURE,
       maxTokens: MAX_TOKENS,
       schema: RESPONSE_SCHEMA,
+      maxRetries: 5,
       messages: [
       { role: 'system', content: MODEL_PROMPT},
       { role: 'system', content: `Current command prompt: ${currentPrompt}` },
