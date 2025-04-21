@@ -140,6 +140,9 @@ export default function App() {
 
     // Set the command prompt
     setCommandPrompt(normalizePrompt(data.command_prompt))
+
+    // Focus the input after command completes
+    inputRef.current?.focus()
   }
 
   // On Enter: echo → loader/API → show prompt again
@@ -162,6 +165,8 @@ export default function App() {
     // Show the form again after processing
     if (formRef.current) {
       formRef.current.style.visibility = 'visible'
+      // Focus input after form becomes visible
+      inputRef.current?.focus()
     }
   }
 
