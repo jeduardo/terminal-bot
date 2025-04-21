@@ -169,18 +169,29 @@ export default function App() {
     <div className="crt">
       <div className="terminal">
         {lines.map((line, i) => {
-          // Show solid cursor at end of last line while streaming output
           const showSolidCursor = isStreaming && i === lines.length - 1
-          // Show blinking cursor at end of last line if not streaming and last line is empty (waiting for processing)
           const showBlinkingCursor =
             !isStreaming && i === lines.length - 1 && line === '' && (
               (!bootComplete) || (bootComplete && input === '')
             )
           return (
             <pre key={i} className="terminal-line" style={{ display: 'flex', alignItems: 'center' }}>
-              <span>{line === '' ? '\u00A0' : line}</span>
-              {showSolidCursor && <span className="cursor-block">{'\u2588'}</span>}
-              {showBlinkingCursor && <span className="cursor-block cursor-blink">{'\u2588'}</span>}
+              {line === ''
+                ? (showSolidCursor || showBlinkingCursor
+                    ? <>
+                        {showSolidCursor && <span className="cursor-block">{'\u2588'}</span>}
+                        {showBlinkingCursor && <span className="cursor-block cursor-blink">{'\u2588'}</span>}
+                      </>
+                    : '\u00A0'
+                  )
+                : (
+                    <span style={{ whiteSpace: 'pre' }}>
+                      {line}
+                      {showSolidCursor && <span className="cursor-block">{'\u2588'}</span>}
+                      {showBlinkingCursor && <span className="cursor-block cursor-blink">{'\u2588'}</span>}
+                    </span>
+                  )
+              }
             </pre>
           )
         })}
