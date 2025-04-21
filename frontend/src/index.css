@@ -25,9 +25,9 @@ html,
 .crt .cursor-block {
   /* Standard: 2, 5, 10 */
   text-shadow:
-    0 0 1px #39ff14,
-    0 0 1px #39ff14,
-    0 0 2px #39ff14;
+    0 0 2px #39ff14,
+    0 0 5px #39ff14,
+    0 0 10px #39ff14;
 }
 
 .crt {
