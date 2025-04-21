@@ -256,6 +256,7 @@ html,
   min-width: 0;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  text-decoration: none;
 }
 
 .terminal-input,
@@ -271,4 +272,5 @@ html,
   min-width: 0;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  text-decoration: none;
 }

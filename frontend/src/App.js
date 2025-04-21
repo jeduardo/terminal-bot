@@ -220,6 +220,9 @@ export default function App() {
                 autoFocus
                 value={input}
                 autoCapitalize="none"
+                autoCorrect="false"
+                spellCheck="false"
+                autoComplete="off"
                 onChange={e => setInput(e.target.value)}
                 style={{
                   width: '100%',
