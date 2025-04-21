@@ -9,7 +9,7 @@ export default function App() {
   const hasBooted = useRef(false)
   const terminalEnd = useRef(null)
   const inputRef = useRef(null)
-  const loaderRef = useRef({ idx: null, interval: null }) // Store loader state here
+  const formRef = useRef(null)
 
   // Helper to normalize the prompt ending
   function normalizePrompt(prompt) {
@@ -43,38 +43,6 @@ export default function App() {
     return messageIdx
   }
 
-  // Loader helpers using loaderRef
-  function showLoader(setLines) {
-    let loaderIdx
-    setLines(prev => {
-      loaderIdx = prev.length
-      return [...prev, '']
-    })
-    let dotCount = 0
-    const loaderInterval = setInterval(() => {
-      dotCount = (dotCount + 1) % 4
-      setLines(prev => {
-        const copy = [...prev]
-        copy[loaderIdx] = '.'.repeat(dotCount)
-        return copy
-      })
-    }, 1000)
-    loaderRef.current = { idx: loaderIdx, interval: loaderInterval }
-  }
-
-  function clearLoader(setLines) {
-    const { idx, interval } = loaderRef.current
-    if (interval !== null) clearInterval(interval)
-    if (idx !== null) {
-      setLines(prev => {
-        const copy = [...prev]
-        copy.splice(idx, 1)
-        return copy
-      })
-    }
-    loaderRef.current = { idx: null, interval: null }
-  }
-
   // Modified boot sequence
   useEffect(() => {
     if (hasBooted.current) return
@@ -95,20 +63,23 @@ export default function App() {
     }
 
     const fetchBootMessages = async () => {
-      // Show loader
-      showLoader(setLines)
+      // Show blinking cursor while waiting for boot
+      setLines([''])
+      setIsStreaming(false) // Not streaming output, just waiting
 
       const response = await getBootMessages()
-      clearLoader(setLines)
+      setLines([]) // Clear the blinking cursor
 
       if (!response) return
       setCommandPrompt(normalizePrompt(response.command_prompt))
       const bootMsgs = response.response
 
+      setIsStreaming(true)
       for (const msg of bootMsgs) {
         await streamMessage(msg)
         await new Promise(r => setTimeout(r, 500))
       }
+      setIsStreaming(false)
       setBootComplete(true)
     }
 
@@ -133,9 +104,10 @@ export default function App() {
 
   // Modified AI response handling
   async function getCommandResponse(command) {
-    // Show loader
-    showLoader(setLines)
-  
+    // Show blinking cursor while waiting for response
+    setLines(prev => [...prev, ''])
+    setIsStreaming(false)
+
     let res
     try {
       res = await fetch('/api/system', {
@@ -144,28 +116,27 @@ export default function App() {
         body: JSON.stringify({ command: command, currentPrompt: commandPrompt }),
       })
     } catch (err) {
-      clearLoader(setLines)
+      setLines(prev => prev.slice(0, -1)) // Remove blinking cursor
       await streamMessage('Error: Connection failed - Please check your network connection')
       return
     }
-  
+
     if (!res.ok) {
-      clearLoader(setLines)
+      setLines(prev => prev.slice(0, -1)) // Remove blinking cursor
       await streamMessage(`Error: Server error (${res.status}) - Please try again later`)
       return
     }
-  
+
     // ...after fetch...
+    setLines(prev => prev.slice(0, -1)) // Remove blinking cursor
     const data = await res.json()
     const linesArr = data.response || []
 
-    // Clear the loader before streaming output
-    clearLoader(setLines)
-
-    // Stream each line in the response array, including empty lines
+    setIsStreaming(true)
     for (const line of linesArr) {
       await streamMessage(line)
     }
+    setIsStreaming(false)
 
     // Set the command prompt
     setCommandPrompt(normalizePrompt(data.command_prompt))
@@ -176,32 +147,85 @@ export default function App() {
     e.preventDefault()
     if (!input) return
 
+    // Hide the form immediately
+    if (formRef.current) {
+      formRef.current.style.visibility = 'hidden'
+    }
+
     setIsStreaming(true)
     setLines(prev => [...prev, (commandPrompt || 'C:\\> ') + input])
     const msg = input
     setInput('')
     await getCommandResponse(msg)
     setIsStreaming(false)
+
+    // Show the form again after processing
+    if (formRef.current) {
+      formRef.current.style.visibility = 'visible'
+    }
   }
 
   return (
     <div className="terminal">
-      {lines.map((line, i) => (
-        <pre key={i} className="terminal-line">{line === '' ? '\u00A0' : line}</pre>
-      ))}
+      {lines.map((line, i) => {
+        // Show solid cursor at end of last line while streaming output
+        const showSolidCursor = isStreaming && i === lines.length - 1
+        // Show blinking cursor at end of last line if not streaming and last line is empty (waiting for processing)
+        const showBlinkingCursor =
+          !isStreaming && i === lines.length - 1 && line === '' && (
+            (!bootComplete) || (bootComplete && input === '')
+          )
+        return (
+          <pre key={i} className="terminal-line" style={{ display: 'flex', alignItems: 'center' }}>
+            <span>{line === '' ? '\u00A0' : line}</span>
+            {showSolidCursor && <span className="cursor-block" />}
+            {showBlinkingCursor && <span className="cursor-block cursor-blink" />}
+          </pre>
+        )
+      })}
 
-      {/* show only after boot AND when not busy */}
-      {bootComplete && !isStreaming && (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+      {/* show only after boot AND when not streaming */}
+      {bootComplete && (
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            visibility: isStreaming ? 'hidden' : 'visible', // <-- Hide when streaming
+          }}
+        >
           <span style={{ whiteSpace: 'pre' }}>{commandPrompt}</span>
-          <input
-            ref={inputRef}
-            autoFocus
-            value={input}
-            autoCapitalize="none"
-            onChange={e => setInput(e.target.value)}
-            style={{ flex: 1, minWidth: 0 }}
-          />
+          <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+            <input
+              ref={inputRef}
+              className="terminal-input"
+              autoFocus
+              value={input}
+              autoCapitalize="none"
+              onChange={e => setInput(e.target.value)}
+              style={{
+                width: '100%',
+                background: 'transparent',
+                color: 'inherit',
+                border: 'none',
+                outline: 'none',
+                font: 'inherit',
+                padding: 0,
+                margin: 0,
+              }}
+            />
+            {/* Blinking block cursor at end of input */}
+            <span
+              className="cursor-block cursor-blink"
+              style={{
+                position: 'absolute',
+                left: `calc(${input.length}ch + 0.1em)`,
+                top: 0,
+                pointerEvents: 'none',
+              }}
+            />
+          </div>
         </form>
       )}
 
