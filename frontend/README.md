@@ -50,7 +50,7 @@ The production assets will be present under the `build/` directory.
 
 # Credits
 
-The frontend uses the font [Fixedsys Excelsior](https://github.com/kika/fixedsys/tree/master), converted to [WOFF2](https://en.wikipedia.org/wiki/Web_Open_Font_Format).
+The frontend uses the font [Fixedsys Excelsior](https://github.com/MARTYR-X-LTD/fixedsys-excelsior), in [WOFF2](https://en.wikipedia.org/wiki/Web_Open_Font_Format).
 
 ## License
 
