@@ -166,70 +166,74 @@ export default function App() {
   }
 
   return (
-    <div className="terminal">
-      {lines.map((line, i) => {
-        // Show solid cursor at end of last line while streaming output
-        const showSolidCursor = isStreaming && i === lines.length - 1
-        // Show blinking cursor at end of last line if not streaming and last line is empty (waiting for processing)
-        const showBlinkingCursor =
-          !isStreaming && i === lines.length - 1 && line === '' && (
-            (!bootComplete) || (bootComplete && input === '')
+    <div className="crt">
+      <div className="terminal">
+        {lines.map((line, i) => {
+          // Show solid cursor at end of last line while streaming output
+          const showSolidCursor = isStreaming && i === lines.length - 1
+          // Show blinking cursor at end of last line if not streaming and last line is empty (waiting for processing)
+          const showBlinkingCursor =
+            !isStreaming && i === lines.length - 1 && line === '' && (
+              (!bootComplete) || (bootComplete && input === '')
+            )
+          return (
+            <pre key={i} className="terminal-line" style={{ display: 'flex', alignItems: 'center' }}>
+              <span>{line === '' ? '\u00A0' : line}</span>
+              {showSolidCursor && <span className="cursor-block">{'\u2588'}</span>}
+              {showBlinkingCursor && <span className="cursor-block cursor-blink">{'\u2588'}</span>}
+            </pre>
           )
-        return (
-          <pre key={i} className="terminal-line" style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{line === '' ? '\u00A0' : line}</span>
-            {showSolidCursor && <span className="cursor-block" />}
-            {showBlinkingCursor && <span className="cursor-block cursor-blink" />}
-          </pre>
-        )
-      })}
+        })}
 
-      {/* show only after boot AND when not streaming */}
-      {bootComplete && (
-        <form
-          ref={formRef}
-          onSubmit={handleSubmit}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            visibility: isStreaming ? 'hidden' : 'visible', // <-- Hide when streaming
-          }}
-        >
-          <span style={{ whiteSpace: 'pre' }}>{commandPrompt}</span>
-          <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
-            <input
-              ref={inputRef}
-              className="terminal-input"
-              autoFocus
-              value={input}
-              autoCapitalize="none"
-              onChange={e => setInput(e.target.value)}
-              style={{
-                width: '100%',
-                background: 'transparent',
-                color: 'inherit',
-                border: 'none',
-                outline: 'none',
-                font: 'inherit',
-                padding: 0,
-                margin: 0,
-              }}
-            />
-            {/* Blinking block cursor at end of input */}
-            <span
-              className="cursor-block cursor-blink"
-              style={{
-                position: 'absolute',
-                left: `calc(${input.length}ch + 0.1em)`,
-                top: 0,
-                pointerEvents: 'none',
-              }}
-            />
-          </div>
-        </form>
-      )}
+        {/* show only after boot AND when not streaming */}
+        {bootComplete && (
+          <form
+            ref={formRef}
+            onSubmit={handleSubmit}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              visibility: isStreaming ? 'hidden' : 'visible', // <-- Hide when streaming
+            }}
+          >
+            <span style={{ whiteSpace: 'pre' }}>{commandPrompt}</span>
+            <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+              <input
+                ref={inputRef}
+                className="terminal-input"
+                autoFocus
+                value={input}
+                autoCapitalize="none"
+                onChange={e => setInput(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: 'transparent',
+                  color: 'inherit',
+                  border: 'none',
+                  outline: 'none',
+                  font: 'inherit',
+                  padding: 0,
+                  margin: 0,
+                }}
+              />
+              {/* Blinking block cursor at end of input */}
+              <span
+                className="cursor-block cursor-blink"
+                style={{
+                  position: 'absolute',
+                  left: `calc(${input.length}ch + 0.1em)`,
+                  top: 0,
+                  pointerEvents: 'none',
+                }}
+              >
+                {'\u2588'}
+              </span>
+            </div>
+          </form>
+        )}
 
-      <div ref={terminalEnd} />
+        <div ref={terminalEnd} />
+      </div>
     </div>
   )
 }

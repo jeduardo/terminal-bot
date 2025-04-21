@@ -17,6 +17,73 @@ html,
   font-size: 1rem;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Multiple backgrounds: scanlines, vignette, and a faint green glow */
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.15) 0px,
+      rgba(0,0,0,0.15) 1px,
+      transparent 2px,
+      transparent 4px
+    ),
+    radial-gradient(ellipse at center, rgba(0,255,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+  opacity: 0.6;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Add a subtle glow to all text */
+.crt,
+.crt .terminal,
+.crt .terminal-line,
+.crt .terminal-input,
+.crt .cursor-block {
+  text-shadow:
+    0 0 2px #39ff14,
+    0 0 5px #39ff14,
+    0 0 10px #39ff14;
+}
+
+.crt {
+  position: relative;
+  background: black;
+  color: lightgreen;
+  font-family: 'FSEX300', monospace;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.crt::before {
+  content: "";
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.15) 0px,
+      rgba(0,0,0,0.15) 1px,
+      transparent 2px,
+      transparent 4px
+    ),
+    radial-gradient(ellipse at center, rgba(0,255,0,0.04) 0%, rgba(0,0,0,0.18) 100%);
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
 .terminal {
   padding: 10px;
   box-sizing: border-box;
@@ -31,6 +98,10 @@ html,
   color: lightgreen;
   border: none;
   outline: none;
+  text-shadow:
+    0 0 2px #39ff14,
+    0 0 5px #39ff14,
+    0 0 10px #39ff14;
 }
 
 .terminal-line {
@@ -41,11 +112,17 @@ html,
 
 .cursor-block {
   display: inline-block;
-  width: 0.5rem;
-  height: 1rem;
-  background: lightgreen;
+  width: 0.7em;
+  height: 1.1em;
+  color: lightgreen;
+  font-family: 'FSEX300', monospace;
+  font-size: 1em;
+  line-height: 1;
   vertical-align: bottom;
-  margin-left: -0.1em;
+  text-shadow:
+    0 0 2px #39ff14,
+    0 0 5px #39ff14,
+    0 0 10px #39ff14;
 }
 
 .cursor-blink {
@@ -62,6 +139,27 @@ html,
   font-family: 'FSEX300', monospace;
   flex: 1;
   min-width: 0;
+  text-shadow:
+    0 0 2px #39ff14,
+    0 0 5px #39ff14,
+    0 0 10px #39ff14;
+}
+
+.terminal-input,
+.terminal input {
+  caret-color: transparent;
+  background: black;
+  color: lightgreen;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: 'FSEX300', monospace;
+  flex: 1;
+  min-width: 0;
+  text-shadow:
+    0 0 2px #39ff14,
+    0 0 5px #39ff14,
+    0 0 10px #39ff14;
 }
 
 @keyframes blink-cursor {
