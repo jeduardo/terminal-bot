@@ -10,6 +10,14 @@ export default function App() {
   const terminalEnd = useRef(null)
   const inputRef = useRef(null)
 
+  // Helper to normalize the prompt ending
+  function normalizePrompt(prompt) {
+    if (!prompt) return 'C:\\> '
+    // Remove any trailing spaces or '>' characters
+    let trimmed = prompt.replace(/[\s>]+$/, '')
+    return trimmed + '> '
+  }
+
   // Auto‑scroll on new lines
   useEffect(() => {
     terminalEnd.current?.scrollIntoView({ behavior: 'smooth' })
@@ -57,7 +65,7 @@ export default function App() {
     const fetchBootMessages = async () => {
       const response = await getBootMessages();
       if (!response) return;
-      setCommandPrompt(response.command_prompt || 'C:\\> ')
+      setCommandPrompt(normalizePrompt(response.command_prompt))
       const bootMsgs = response.response;
 
       for (const msg of bootMsgs) {
@@ -138,7 +146,6 @@ export default function App() {
   
     // 4) process the response
     const data = await res.json()
-    setCommandPrompt(data.command_prompt || 'C:\\> ')
     const linesArr = data.response || []
 
     // Clear the loader
@@ -153,6 +160,9 @@ export default function App() {
     for (const line of linesArr) {
       await streamMessage(line)
     }
+
+    // Set the command prompt
+    setCommandPrompt(normalizePrompt(data.commandPrompt))
   }
 
   // On Enter: echo → loader/API → show prompt again
@@ -171,20 +181,22 @@ export default function App() {
 
   return (
     <div className="terminal">
+      {/* We need to add an empty character here for React to show the empty line */}
       {lines.map((line, i) => (
-        <div key={i}>{line}</div>
+        <pre key={i} className="terminal-line">{line === '' ? '\u00A0' : line}</pre>
       ))}
 
       {/* show only after boot AND when not busy */}
       {bootComplete && !isStreaming && (
-        <form onSubmit={handleSubmit}>
-          <span>{commandPrompt}</span>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ whiteSpace: 'pre' }}>{commandPrompt}</span>
           <input
             ref={inputRef}
             autoFocus
             value={input}
             autoCapitalize="none"
             onChange={e => setInput(e.target.value)}
+            style={{ flex: 1, minWidth: 0 }}
           />
         </form>
       )}

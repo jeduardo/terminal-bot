@@ -31,5 +31,10 @@ html,
   color: lightgreen;
   border: none;
   outline: none;
-  width: calc(100% - 55px);
+}
+
+.terminal-line {
+  font-family: 'FSEX300', monospace;
+  white-space: pre-wrap;
+  margin: 0;
 }
