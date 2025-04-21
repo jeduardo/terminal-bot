@@ -72,6 +72,7 @@ jobs:
             sudo chown $DEPLOY_USER:$DEPLOY_USER $DEPLOY_PATH -R && \
             cd $DEPLOY_PATH && \
             sed -i 's/YOUR_API_KEY/$GOOGLE_API_KEY/' .env.$DEPLOY_ENV && \
+            sed -i 's/#FRONTEND_DIR/#RONTEND_DIR/' .env.$DEPLOY_ENV && \
             npm ci --omit=dev && \
             sudo systemctl start $DEPLOY_SERVICE
           "
