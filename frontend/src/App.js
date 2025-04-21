@@ -9,11 +9,11 @@ export default function App() {
   const hasBooted = useRef(false)
   const terminalEnd = useRef(null)
   const inputRef = useRef(null)
+  const loaderRef = useRef({ idx: null, interval: null }) // Store loader state here
 
   // Helper to normalize the prompt ending
   function normalizePrompt(prompt) {
     if (!prompt) return 'C:\\> '
-    // Remove any trailing spaces or '>' characters
     let trimmed = prompt.replace(/[\s>]+$/, '')
     return trimmed + '> '
   }
@@ -43,6 +43,38 @@ export default function App() {
     return messageIdx
   }
 
+  // Loader helpers using loaderRef
+  function showLoader(setLines) {
+    let loaderIdx
+    setLines(prev => {
+      loaderIdx = prev.length
+      return [...prev, '']
+    })
+    let dotCount = 0
+    const loaderInterval = setInterval(() => {
+      dotCount = (dotCount + 1) % 4
+      setLines(prev => {
+        const copy = [...prev]
+        copy[loaderIdx] = '.'.repeat(dotCount)
+        return copy
+      })
+    }, 1000)
+    loaderRef.current = { idx: loaderIdx, interval: loaderInterval }
+  }
+
+  function clearLoader(setLines) {
+    const { idx, interval } = loaderRef.current
+    if (interval !== null) clearInterval(interval)
+    if (idx !== null) {
+      setLines(prev => {
+        const copy = [...prev]
+        copy.splice(idx, 1)
+        return copy
+      })
+    }
+    loaderRef.current = { idx: null, interval: null }
+  }
+
   // Modified boot sequence
   useEffect(() => {
     if (hasBooted.current) return
@@ -63,10 +95,15 @@ export default function App() {
     }
 
     const fetchBootMessages = async () => {
-      const response = await getBootMessages();
-      if (!response) return;
+      // Show loader
+      showLoader(setLines)
+
+      const response = await getBootMessages()
+      clearLoader(setLines)
+
+      if (!response) return
       setCommandPrompt(normalizePrompt(response.command_prompt))
-      const bootMsgs = response.response;
+      const bootMsgs = response.response
 
       for (const msg of bootMsgs) {
         await streamMessage(msg)
@@ -96,25 +133,9 @@ export default function App() {
 
   // Modified AI response handling
   async function getCommandResponse(command) {
-    // 1) insert an empty loader line
-    let loaderIdx
-    setLines(prev => {
-      loaderIdx = prev.length
-      return [...prev, '']
-    })
+    // Show loader
+    showLoader(setLines)
   
-    // 2) start a rotating-dot interval (0→1→2→3→0…)
-    let dotCount = 0
-    const loaderInterval = setInterval(() => {
-      dotCount = (dotCount + 1) % 4
-      setLines(prev => {
-        const copy = [...prev]
-        copy[loaderIdx] = '.'.repeat(dotCount)
-        return copy
-      })
-    }, 1000)
-  
-    // 3) now kick off the fetch
     let res
     try {
       res = await fetch('/api/system', {
@@ -123,38 +144,23 @@ export default function App() {
         body: JSON.stringify({ command: command, currentPrompt: commandPrompt }),
       })
     } catch (err) {
-      clearInterval(loaderInterval)
-      setLines(prev => {
-        const copy = [...prev]
-        copy.splice(loaderIdx, 1)
-        return copy
-      })
+      clearLoader(setLines)
       await streamMessage('Error: Connection failed - Please check your network connection')
       return
     }
   
     if (!res.ok) {
-      clearInterval(loaderInterval)
-      setLines(prev => {
-        const copy = [...prev]
-        copy.splice(loaderIdx, 1)
-        return copy
-      })
+      clearLoader(setLines)
       await streamMessage(`Error: Server error (${res.status}) - Please try again later`)
       return
     }
   
-    // 4) process the response
+    // ...after fetch...
     const data = await res.json()
     const linesArr = data.response || []
 
-    // Clear the loader
-    clearInterval(loaderInterval)
-    setLines(prev => {
-      const copy = [...prev]
-      copy.splice(loaderIdx, 1)
-      return copy
-    })
+    // Clear the loader before streaming output
+    clearLoader(setLines)
 
     // Stream each line in the response array, including empty lines
     for (const line of linesArr) {
@@ -162,7 +168,7 @@ export default function App() {
     }
 
     // Set the command prompt
-    setCommandPrompt(normalizePrompt(data.commandPrompt))
+    setCommandPrompt(normalizePrompt(data.command_prompt))
   }
 
   // On Enter: echo → loader/API → show prompt again
@@ -171,7 +177,6 @@ export default function App() {
     if (!input) return
 
     setIsStreaming(true)
-    // echo with dynamic prompt prefix
     setLines(prev => [...prev, (commandPrompt || 'C:\\> ') + input])
     const msg = input
     setInput('')
@@ -181,7 +186,6 @@ export default function App() {
 
   return (
     <div className="terminal">
-      {/* We need to add an empty character here for React to show the empty line */}
       {lines.map((line, i) => (
         <pre key={i} className="terminal-line">{line === '' ? '\u00A0' : line}</pre>
       ))}
