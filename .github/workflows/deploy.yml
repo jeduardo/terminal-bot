@@ -61,9 +61,11 @@ jobs:
 
           # Remove old files
           ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "rm -rf $DEPLOY_PATH/*"
+          ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "rm -rf $DEPLOY_PATH/.env.$DEPLOY_ENV"
 
           # Copy files
           scp -P $DEPLOY_PORT -r deploy/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+          scp -P $DEPLOY_PORT -r deploy/.env.$DEPLOY_ENV $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
           # Update API key and permissions, install dependencies, and start the service
           ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST "
