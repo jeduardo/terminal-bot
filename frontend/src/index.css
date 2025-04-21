@@ -206,6 +206,8 @@ html,
   box-sizing: border-box;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  width: 100%;
 }
 
 .terminal input {
@@ -215,12 +217,16 @@ html,
   color: lightgreen;
   border: none;
   outline: none;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .terminal-line {
   font-family: 'FSEX300', monospace;
-  white-space: pre-wrap;
+  white-space: pre-wrap; /* Allow text wrapping */
   margin: 0;
+  word-break: break-all; /* Break long words */
+  max-width: 100%; /* Ensure content doesn't exceed container */
 }
 
 .cursor-block {
@@ -248,6 +254,8 @@ html,
   font-family: 'FSEX300', monospace;
   flex: 1;
   min-width: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .terminal-input,
@@ -261,4 +269,6 @@ html,
   font-family: 'FSEX300', monospace;
   flex: 1;
   min-width: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
