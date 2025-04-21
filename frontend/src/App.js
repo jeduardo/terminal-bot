@@ -5,6 +5,7 @@ export default function App() {
   const [input, setInput] = useState('')
   const [bootComplete, setBootComplete] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
+  const [commandPrompt, setCommandPrompt] = useState('C:\\> ')
   const hasBooted = useRef(false)
   const terminalEnd = useRef(null)
   const inputRef = useRef(null)
@@ -39,25 +40,34 @@ export default function App() {
     if (hasBooted.current) return
     hasBooted.current = true
 
-    const bootMsgs = [
-      'Initializing system...',
-      'SYSBOOT complete',
-      'Kernel loaded',
-      'COM1: Ready',
-      'Loading modules...',
-      'HIMEM.SYS loaded',
-      'Extended memory detected',
-      '640K conventional memory available',
-      'Ready.'
-    ]
+    const getBootMessages = async () => {
+      const res = await fetch('/api/boot', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
 
-    ;(async () => {
+      if (!res.ok) {
+        await streamMessage(`Error: Server error (${res.status}) - Please try again later`)
+        return
+      }
+
+      return res.json();
+    }
+
+    const fetchBootMessages = async () => {
+      const response = await getBootMessages();
+      if (!response) return;
+      setCommandPrompt(response.command_prompt || 'C:\\> ')
+      const bootMsgs = response.response;
+
       for (const msg of bootMsgs) {
         await streamMessage(msg)
         await new Promise(r => setTimeout(r, 500))
       }
       setBootComplete(true)
-    })()
+    }
+
+    fetchBootMessages()
   }, [])
 
   // Add focus handler effect
@@ -77,7 +87,7 @@ export default function App() {
   }, [])
 
   // Modified AI response handling
-  async function streamAIResponse(message) {
+  async function getCommandResponse(command) {
     // 1) insert an empty loader line
     let loaderIdx
     setLines(prev => {
@@ -99,10 +109,10 @@ export default function App() {
     // 3) now kick off the fetch
     let res
     try {
-      res = await fetch('/api/chat', {
+      res = await fetch('/api/system', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ command: command, currentPrompt: commandPrompt }),
       })
     } catch (err) {
       clearInterval(loaderInterval)
@@ -127,16 +137,9 @@ export default function App() {
     }
   
     // 4) process the response
-    const reader = res.body.getReader()
-    const decoder = new TextDecoder('utf-8')
-    let fullResponse = ''
-
-    // Collect the entire response
-    while (true) {
-      const { value, done } = await reader.read()
-      if (done) break
-      fullResponse += decoder.decode(value, { stream: true })
-    }
+    const data = await res.json()
+    setCommandPrompt(data.command_prompt || 'C:\\> ')
+    const linesArr = data.response || []
 
     // Clear the loader
     clearInterval(loaderInterval)
@@ -146,12 +149,9 @@ export default function App() {
       return copy
     })
 
-    // Split by newline tokens and stream each line
-    const lines = fullResponse.split('|NEWLINE|')
-    for (const line of lines) {
-      if (line.trim()) {
-        await streamMessage(line)
-      }
+    // Stream each line in the response array, including empty lines
+    for (const line of linesArr) {
+      await streamMessage(line)
     }
   }
 
@@ -161,11 +161,11 @@ export default function App() {
     if (!input) return
 
     setIsStreaming(true)
-    // echo with arrow prefix
-    setLines(prev => [...prev, 'C:\\> ' + input])
+    // echo with dynamic prompt prefix
+    setLines(prev => [...prev, (commandPrompt || 'C:\\> ') + input])
     const msg = input
     setInput('')
-    await streamAIResponse(msg)
+    await getCommandResponse(msg)
     setIsStreaming(false)
   }
 
@@ -178,7 +178,7 @@ export default function App() {
       {/* show only after boot AND when not busy */}
       {bootComplete && !isStreaming && (
         <form onSubmit={handleSubmit}>
-          <span>C:\&gt; </span>
+          <span>{commandPrompt}</span>
           <input
             ref={inputRef}
             autoFocus

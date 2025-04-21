@@ -42,10 +42,19 @@ The API will be available at `http://localhost:8080`.
 You can use [HTTPie](https://httpie.io/) or any other URL client to test the backend, as below:
 
 ```shell
-http --stream POST http://localhost:8080/api/chat \
-  Content-Type:application/json \
-  message="who are you"
+# Get boot messages
+http http://localhost:8080/api/boot Content-Type:application/json
+
+# Run a command from the current prompt
+http POST http://localhost:8080/api/system Content-Type:application/json command="dir" currentPrompt="c:\\"
 ```
+
+# Payload format
+
+For both endpoints, the API returns JSON payloads with the following fields:
+
+* commandPrompt: `string`, content of the shell prompt after command execution or boot
+* response: `array` of `string`, each line corresponding to the output of a command
 
 ## License
 
