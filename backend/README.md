@@ -1,11 +1,14 @@
 # Terminal Bot Backend
 
-This is the backend service for **Terminal Bot**, a Node.js project designed to provide intelligent terminal automation and assistance. This backend exposes a RESTful API and handles core logic, user management, and integration with external services.
+This is the backend service for **Terminal Bot**, a project intending to use AI models to simulate a DOS session.
+This backend exposes a RESTful API and handles core logic, user management, and integration with external services.
+It needs to exist to isolate the API key we use and to restrict what we want to send to the AI model and how it should react to it.
+It also formats the output to JSON so we can use it in the frontend.
 
 ## Features
 
-- RESTful API for terminal automation
-- Configurable environment
+- Initial boot messages
+- Configurable prompts and ports through `.env` files.
 
 ## Prerequisites
 

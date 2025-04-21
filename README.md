@@ -1,6 +1,6 @@
-# Web Terminal Bot
+# Terminal Bot
 
-A simulation of a broken operating system that uses Google Gemini to generate responses based on user commands.
+Terminal Bot is a simulation of a DOS session using the Gemini LLM models from Google.
 
 ## Project Structure
 
@@ -45,11 +45,11 @@ A simulation of a broken operating system that uses Google Gemini to generate re
 ## Usage
 
 - Open your browser to the application frontend URL (e.g., `http://localhost:3000`).
-- Type commands into the simulated terminal. The backend forwards these commands to Google Gemini and returns generated responses, creating the illusion of a broken OS.
+- Type commands into the simulated terminal. The backend forwards these commands to Google Gemini and returns generated responses, creating the illusion of a DOS session.
 
 ## Security Considerations & Risks
 
-- **Authentication**: The backend API endpoints are currently not authenticated.
+- **Authentication**: The backend API endpoints are currently not authenticated. This is by design, as the backend works primarily to protect the Gemini API key.
 - **API Key Security**: The Gemini API key is stored in environment variables. Ensure these are properly secured in production deployments.
 
 ## Deployment Instructions

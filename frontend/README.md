@@ -4,9 +4,8 @@ This is the React-based frontend for the Terminal Bot project. It provides a use
 
 ## Features
 
-- Modern React UI for the Terminal Bot
-- Real-time communication with the backend API
-- Easy-to-use command input and output display
+- Terminal simulation for a DOS prompt
+- Old school look and feel
 
 ## Getting Started
 
