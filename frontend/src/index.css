@@ -17,40 +17,17 @@ html,
   font-size: 1rem;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  z-index: 9999;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  /* Multiple backgrounds: scanlines, vignette, and a faint green glow */
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.15) 0px,
-      rgba(0,0,0,0.15) 1px,
-      transparent 2px,
-      transparent 4px
-    ),
-    radial-gradient(ellipse at center, rgba(0,255,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
-  opacity: 0.6;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
 /* Add a subtle glow to all text */
 .crt,
 .crt .terminal,
 .crt .terminal-line,
 .crt .terminal-input,
 .crt .cursor-block {
+  /* Standard: 2, 5, 10 */
   text-shadow:
-    0 0 2px #39ff14,
-    0 0 5px #39ff14,
-    0 0 10px #39ff14;
+    0 0 1px #39ff14,
+    0 0 1px #39ff14,
+    0 0 2px #39ff14;
 }
 
 .crt {
@@ -98,10 +75,6 @@ body::before {
   color: lightgreen;
   border: none;
   outline: none;
-  text-shadow:
-    0 0 2px #39ff14,
-    0 0 5px #39ff14,
-    0 0 10px #39ff14;
 }
 
 .terminal-line {
@@ -119,10 +92,6 @@ body::before {
   font-size: 1em;
   line-height: 1;
   vertical-align: bottom;
-  text-shadow:
-    0 0 2px #39ff14,
-    0 0 5px #39ff14,
-    0 0 10px #39ff14;
 }
 
 .cursor-blink {
@@ -139,10 +108,6 @@ body::before {
   font-family: 'FSEX300', monospace;
   flex: 1;
   min-width: 0;
-  text-shadow:
-    0 0 2px #39ff14,
-    0 0 5px #39ff14,
-    0 0 10px #39ff14;
 }
 
 .terminal-input,
@@ -156,10 +121,6 @@ body::before {
   font-family: 'FSEX300', monospace;
   flex: 1;
   min-width: 0;
-  text-shadow:
-    0 0 2px #39ff14,
-    0 0 5px #39ff14,
-    0 0 10px #39ff14;
 }
 
 @keyframes blink-cursor {
