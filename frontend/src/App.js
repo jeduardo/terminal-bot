@@ -233,6 +233,7 @@ export default function App() {
                   font: 'inherit',
                   padding: 0,
                   margin: 0,
+                  textDecoration: 'none',
                 }}
               />
               {/* Blinking block cursor at end of input */}
