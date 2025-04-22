@@ -142,16 +142,30 @@
   }
 }
 
+:root {
+  --terminal-text: lightgreen;
+  --terminal-bg: black;
+  --terminal-font-size: 1.2rem;
+  --terminal-font-family: 'FSEX300', monospace;
+}
+
+/* Mobile devices */
+@media screen and (max-width: 768px) {
+  :root {
+    --terminal-font-size: 1.1rem;
+  }
+}
+
 body,
 html,
 #root {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: black;
-  color: lightgreen;
-  font-family: 'FSEX300', monospace;
-  font-size: 1rem;
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+  font-family: var(--terminal-font-family);
+  font-size: var(--terminal-font-size);
 }
 
 /* Add a subtle glow to all text */
@@ -165,10 +179,10 @@ html,
 
 .crt {
   position: relative;
-  background: black;
-  color: lightgreen;
-  font-family: 'FSEX300', monospace;
-  font-size: 1rem;
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+  font-family: var(--terminal-font-family);
+  font-size: var(--terminal-font-size);
   overflow: hidden;
 }
 
@@ -211,10 +225,10 @@ html,
 }
 
 .terminal input {
-  font-size: 1rem;
-  font-family: 'FSEX300', monospace;
-  background: black;
-  color: lightgreen;
+  font-size: var(--terminal-font-size);
+  font-family: var(--terminal-font-family);
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
   border: none;
   outline: none;
   width: 100%;
@@ -222,7 +236,7 @@ html,
 }
 
 .terminal-line {
-  font-family: 'FSEX300', monospace;
+  font-family: var(--terminal-font-family);
   white-space: pre-wrap; /* Allow text wrapping */
   margin: 0;
   word-break: break-all; /* Break long words */
@@ -233,9 +247,9 @@ html,
   display: inline-block;
   width: 0.7em;
   height: 1.1em;
-  color: lightgreen;
-  font-family: 'FSEX300', monospace;
-  font-size: 1em;
+  color: var(--terminal-text);
+  font-family: var(--terminal-font-family);
+  font-size: var(--terminal-font-size);
   line-height: 1;
   vertical-align: bottom;
 }
@@ -246,31 +260,29 @@ html,
 
 .terminal-input {
   caret-color: transparent; /* Hide native caret */
-  background: black;
-  color: lightgreen;
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
   border: none;
   outline: none;
-  font-size: 1rem;
-  font-family: 'FSEX300', monospace;
+  font-size: var(--terminal-font-size);
+  font-family: var(--terminal-font-family);
   flex: 1;
   min-width: 0;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scrolling */
-  text-decoration: none;
 }
 
 .terminal-input,
 .terminal input {
   caret-color: transparent;
-  background: black;
-  color: lightgreen;
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
   border: none;
   outline: none;
-  font-size: 1rem;
-  font-family: 'FSEX300', monospace;
+  font-size: var(--terminal-font-size);
+  font-family: var(--terminal-font-family);
   flex: 1;
   min-width: 0;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scrolling */
-  text-decoration: none;
 }
