@@ -79,6 +79,8 @@ export default function App() {
         await streamMessage(msg)
         await new Promise(r => setTimeout(r, 500))
       }
+      // Adding an empty line prior to showing the prompt
+      await streamMessage("")
       setIsStreaming(false)
       setBootComplete(true)
     }
