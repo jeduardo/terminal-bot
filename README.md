@@ -54,7 +54,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
 
 ## Deployment Instructions
 
-### Service
+### Linux service
 
 1. Create the service location and service user:
    ```shell
@@ -125,7 +125,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
 
    ```
 
-### Docker
+### Docker Container
 
 1. **Build the Docker image**
    ```bash
@@ -136,6 +136,12 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
    ```bash
    docker run -d -p 8080:8080 --env-file /path/to/your/.env terminal-bot
    ```
+
+### Vercel
+
+This repository comes with a `vercel.json` file instructing Vercel to build each part of the project separately.
+
+To deploy this project on Vercel, import the Github repository and create all environment variables from [env.example](backend/env.example) using the Vercel control panel.
 
 ## License
 
