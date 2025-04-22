@@ -71,7 +71,7 @@ export default function App() {
       setLines([]) // Clear the blinking cursor
 
       if (!response) return
-      setCommandPrompt(normalizePrompt(response.command_prompt))
+      setCommandPrompt(normalizePrompt(response.commandPrompt))
       const bootMsgs = response.response
 
       setIsStreaming(true)
@@ -139,7 +139,7 @@ export default function App() {
     setIsStreaming(false)
 
     // Set the command prompt
-    setCommandPrompt(normalizePrompt(data.command_prompt))
+    setCommandPrompt(normalizePrompt(data.commandPrompt))
 
     // Focus the input after command completes
     inputRef.current?.focus()
