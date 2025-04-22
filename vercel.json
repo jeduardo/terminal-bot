@@ -8,8 +8,7 @@
     },
     {
       "src": "backend/server.js",
-      "use": "@vercel/node",
-      "config": { "maxDuration": 120 }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
