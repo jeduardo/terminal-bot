@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
 
 export default function App() {
   const [lines, setLines] = useState([])
@@ -254,6 +256,9 @@ export default function App() {
 
         <div ref={terminalEnd} />
       </div>
+      {/* Vercel-specific metric collectors */}
+      <Analytics />
+      <SpeedInsights />
     </div>
   )
 }
