@@ -246,7 +246,7 @@ html,
 .cursor-block {
   display: inline-block;
   width: 0.7em;
-  height: 1.1em;
+  height: var(--terminal-font-size);
   color: var(--terminal-text);
   font-family: var(--terminal-font-family);
   font-size: var(--terminal-font-size);
