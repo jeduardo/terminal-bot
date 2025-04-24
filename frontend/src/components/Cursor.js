@@ -1,5 +1,3 @@
-import React from 'react'
-
 /**
  * A simple cursor component that can be used to indicate the current input position.
  *
