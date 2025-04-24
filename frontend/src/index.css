@@ -244,7 +244,6 @@ html,
 }
 
 .cursor-block {
-  display: inline-block;
   width: 0.7em;
   height: var(--terminal-font-size);
   color: var(--terminal-text);
