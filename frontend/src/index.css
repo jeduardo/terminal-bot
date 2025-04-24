@@ -257,20 +257,6 @@ html,
   animation: textShadow 1.6s infinite, blink-cursor 1s steps(1) infinite;
 }
 
-.terminal-input {
-  caret-color: transparent; /* Hide native caret */
-  background: var(--terminal-bg);
-  color: var(--terminal-text);
-  border: none;
-  outline: none;
-  font-size: var(--terminal-font-size);
-  font-family: var(--terminal-font-family);
-  flex: 1;
-  min-width: 0;
-  width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
 .terminal-input,
 .terminal input {
   caret-color: transparent;
@@ -284,4 +270,7 @@ html,
   min-width: 0;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding: 0;
+  margin: 0;
+  text-decoration: 'none';
 }

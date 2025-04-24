@@ -25,7 +25,7 @@ export function Cursor({
                 display: hidden ? 'none' : 'inline-block' ,
                 ...(input && {
                     position: 'absolute',
-                    left: `calc(${inputLength ? inputLength : 0}ch + 0.1em)`,
+                    left: `${inputLength ? inputLength : 0}ch`,
                     top: 0,
                 }),
                 ...style,

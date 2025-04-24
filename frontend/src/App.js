@@ -230,17 +230,6 @@ export default function App() {
                 spellCheck="false"
                 autoComplete="off"
                 onChange={e => setInput(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: 'transparent',
-                  color: 'inherit',
-                  border: 'none',
-                  outline: 'none',
-                  font: 'inherit',
-                  padding: 0,
-                  margin: 0,
-                  textDecoration: 'none',
-                }}
               />
               <Cursor blink={true} input={true} inputLength={input.length} />
             </div>
