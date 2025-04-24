@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 
 import { google } from '@ai-sdk/google'
-import { generateObject, streamText } from 'ai'
+import { generateObject } from 'ai'
 import { z } from 'zod'
 
 dotenv.config({ path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env' })
