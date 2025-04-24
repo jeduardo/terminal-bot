@@ -24,6 +24,7 @@ const RESPONSE_SCHEMA = z.object({
 })
 
 const app = express()
+app.set('trust proxy', true)
 app.use(morgan('combined'))
 app.use(cors())
 app.use(express.json())
