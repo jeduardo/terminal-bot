@@ -7,6 +7,7 @@ import { Cursor } from './components/Cursor'
 export default function App() {
   const [lines, setLines] = useState([])
   const [input, setInput] = useState('')
+  const [messageHistory, setMessageHistory] = useState([])
   const [bootComplete, setBootComplete] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [isProcessing, setIsProcessing] = useState(true)
@@ -76,6 +77,10 @@ export default function App() {
       setLines([]) // Clear the blinking cursor
 
       if (!response) return
+
+      // add response content to history, joining array into newlines.
+      setMessageHistory(prev => [...prev, {"role": "assistant", "content": response.response.join('\n')}])
+
       setCommandPrompt(normalizePrompt(response.commandPrompt))
       const bootMsgs = response.response
 
@@ -113,7 +118,7 @@ export default function App() {
   }, [])
 
   // Modified AI response handling
-  async function getCommandResponse(command) {
+  async function getCommandResponse(commandPrompt, command) {
     // Show blinking cursor while waiting for response
     setLines(prev => [...prev, ''])
     setIsProcessing(true)
@@ -123,7 +128,7 @@ export default function App() {
       res = await fetch('/api/system', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ command: command, currentPrompt: commandPrompt }),
+        body: JSON.stringify({ command: command, currentPrompt: commandPrompt, history: messageHistory })
       })
     } catch (err) {
       await streamMessage('Error: Connection failed - Please check your network connection')
@@ -141,6 +146,11 @@ export default function App() {
     // ...after fetch...
     const data = await res.json()
     const linesArr = data.response || []
+
+    // Add the command to the message history
+    setMessageHistory(prev => [...prev, {"role": "user", "content": command}])
+    // Then do the same for the response
+    setMessageHistory(prev => [...prev, {"role": "assistant", "content": linesArr.join('\n')}])
 
     setIsStreaming(true)
     for (const line of linesArr) {
@@ -169,7 +179,7 @@ export default function App() {
     setLines(prev => [...prev, commandPrompt + input])
     const msg = input
     setInput('')
-    await getCommandResponse(msg)
+    await getCommandResponse(commandPrompt, msg)
     setIsStreaming(false)
 
     // Show the form again after processing

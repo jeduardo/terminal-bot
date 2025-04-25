@@ -49,7 +49,7 @@ You can use [HTTPie](https://httpie.io/) or any other URL client to test the bac
 http http://localhost:8080/api/boot Content-Type:application/json
 
 # Run a command from the current prompt
-http POST http://localhost:8080/api/system Content-Type:application/json command="dir" currentPrompt="c:\\"
+http POST http://localhost:8080/api/system Content-Type:application/json command="dir" currentPrompt="c:\\" history='["ver", "c:"]'
 ```
 
 # Payload format
