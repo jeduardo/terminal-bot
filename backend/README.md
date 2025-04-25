@@ -48,8 +48,8 @@ You can use [HTTPie](https://httpie.io/) or any other URL client to test the bac
 # Get boot messages
 http http://localhost:8080/api/boot Content-Type:application/json
 
-# Run a command from the current prompt
-http POST http://localhost:8080/api/system Content-Type:application/json command="dir" currentPrompt="c:\\" history='["ver", "c:"]'
+# Run a command from the current prompt 
+http POST http://localhost:8080/api/system Content-Type:application/json command="dir" currentPrompt="c:\\" history='[{"role":"user","content":"ver"},{"role":"assistant","content":"MS-DOS Version 6.22"},{"role":"user","content":"echo lala > test.txt"},{"role":"user","content":"type test.txt"},{"role":"assistant","content":"lala"}]'
 ```
 
 # Payload format
