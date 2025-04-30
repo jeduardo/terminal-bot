@@ -4,7 +4,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
 
 ## Project Structure
 
-- [`frontend/`](frontend/README.md) - Contains the frontend application in React that simulates the terminal UI in the browser. 
+- [`frontend/`](frontend/README.md) - Contains the frontend application in React that simulates the terminal UI in the browser.
 - [`backend/`](backend/README.md) - Contains the backend server code responsible for interacting with Google Gemini, handling API requests, and serving the main application.
 
 ## Getting Started
@@ -18,25 +18,28 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
 ### Local development
 
 1. **Clone this repository**
+
    ```bash
    git clone http://github.com/jeduardo/terminal-bot.git
    cd terminal-bot
    ```
 
 2. **Configure the backend**
-    ```bash
-    cp backend/.env.example backend/.env
-    # Edit the .env file to have your Gemini API key
-    ```
+
+   ```bash
+   cp backend/.env.example backend/.env
+   # Edit the .env file to have your Gemini API key
+   ```
 
 3. **Run the backend**
+
    ```bash
    cd backend
    npm install
    npm start
    ```
 
-3. **Run the frontend** (in a separate terminal)
+4. **Run the frontend** (in a separate terminal)
    ```bash
    npm install
    npm start
@@ -57,6 +60,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
 ### Linux service
 
 1. Create the service location and service user:
+
    ```shell
    # Create user
    sudo groupadd --system terminal-bot
@@ -67,6 +71,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
    ```
 
 2. Build the frontend assets and copy them to the service location:
+
    ```bash
    cd frontend
    npm install
@@ -75,7 +80,8 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
    cd ..
    ```
 
-2. Set up environment variables:
+3. Set up environment variables:
+
    ```bash
    sudo cp backend/.env.example /srv/terminal-bot/.env.production
    # Edit .env.production with production settings
@@ -88,7 +94,8 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
    FRONTEND_DIR=public
    ```
 
-3. Prepare the service location
+4. Prepare the service location
+
    ```bash
    sudo cp backend/{package.json,server.js} /srv/terminal-bot/
    cd /srv/terminal-bot
@@ -97,6 +104,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
    ```
 
 5. Add the systemd service file:
+
    ```bash
    sudo cp deployment/terminal-bot.service /etc/systemd/system/
    sudo systemctl enable terminal-bot
@@ -104,11 +112,13 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
    ```
 
 6. Fix ownership:
+
    ```bash
    sudo chown terminal-bot:terminal-bot /srv/terminal-bot/ -R
-   ````
+   ```
 
 7. (Optional) Add nginx passthrough if necessary:
+
    ```conf
    # rest of config
     location / {
@@ -128,6 +138,7 @@ Terminal Bot is a simulation of a DOS session using the Gemini LLM models from G
 ### Docker Container
 
 1. **Build the Docker image**
+
    ```bash
    docker build -f deployment/Dockerfile -t terminal-bot .
    ```
@@ -146,4 +157,3 @@ To deploy this project on Vercel, import the Github repository and create all en
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
