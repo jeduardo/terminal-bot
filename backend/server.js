@@ -20,8 +20,6 @@ const FRONTEND_DIR = `${process.env.FRONTEND_DIR}`;
 const TEMPERATURE = parseFloat(process.env.MODEL_TEMPERATURE);
 const MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS);
 
-const FAKE_SECRET_KEY = "hardcoded_secret";
-
 const RESPONSE_SCHEMA = z.object({
   commandPrompt: z.string(),
   response: z.array(z.string()),
