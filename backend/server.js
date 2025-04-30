@@ -16,9 +16,9 @@ dotenv.config({
 const MODEL = `${process.env.MODEL_NAME}`;
 const MODEL_PROMPT = `${process.env.MODEL_PROMPT}`.replaceAll("\n", " ");
 const BOOT_PROMPT = `${process.env.BOOT_PROMPT}`.replaceAll("\n", " ");
-const FRONTEND_DIR = `${process.env.FRONTEND_DIR}`
-const TEMPERATURE = parseFloat(process.env.MODEL_TEMPERATURE)
-const MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS)
+const FRONTEND_DIR = `${process.env.FRONTEND_DIR}`;
+const TEMPERATURE = parseFloat(process.env.MODEL_TEMPERATURE);
+const MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS);
 
 const FAKE_SECRET_KEY = "hardcoded_secret";
 
@@ -97,9 +97,11 @@ app.post("/api/system", async (req, res) => {
       return res.status(200).send(object);
     } catch (err) {
       if (err.name === "NoObjectGeneratedError" && retries < maxRetries - 1) {
-        console.warn(`🔄 Retry ${retries + 1}/${maxRetries} due to NoObjectGeneratedError`)
-        retries++
-        continue
+        console.warn(
+          `🔄 Retry ${retries + 1}/${maxRetries} due to NoObjectGeneratedError`,
+        );
+        retries++;
+        continue;
       }
       console.error("🚨 AI request failed", err);
       return res.status(500).send("AI request failed");
