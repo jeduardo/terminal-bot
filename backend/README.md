@@ -18,19 +18,20 @@ It also formats the output to JSON so we can use it in the frontend.
 ## Configuration
 
 1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/jeduardo/terminal-bot.git
-    cd terminal-bot/backend
-    ```
+
+   ```bash
+   git clone https://github.com/jeduardo/terminal-bot.git
+   cd terminal-bot/backend
+   ```
 
 2. **Set environment variables:**
 
-    Copy the`.env.example` file in the `backend` as `.env`, replacing your API key inside it.
+   Copy the`.env.example` file in the `backend` as `.env`, replacing your API key inside it.
 
 3. **Install dependencies:**
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 ## Running the Backend
 
@@ -48,7 +49,7 @@ You can use [HTTPie](https://httpie.io/) or any other URL client to test the bac
 # Get boot messages
 http http://localhost:8080/api/boot Content-Type:application/json
 
-# Run a command from the current prompt 
+# Run a command from the current prompt
 http POST http://localhost:8080/api/system Content-Type:application/json command="dir" currentPrompt="c:\\" history='[{"role":"user","content":"ver"},{"role":"assistant","content":"MS-DOS Version 6.22"},{"role":"user","content":"echo lala > test.txt"},{"role":"user","content":"type test.txt"},{"role":"assistant","content":"lala"}]'
 ```
 
@@ -56,8 +57,8 @@ http POST http://localhost:8080/api/system Content-Type:application/json command
 
 For both endpoints, the API returns JSON payloads with the following fields:
 
-* commandPrompt: `string`, content of the shell prompt after command execution or boot
-* response: `array` of `string`, each line corresponding to the output of a command
+- commandPrompt: `string`, content of the shell prompt after command execution or boot
+- response: `array` of `string`, each line corresponding to the output of a command
 
 ## License
 

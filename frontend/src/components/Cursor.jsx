@@ -11,27 +11,27 @@
  * @param {React.CSSProperties} [props.style] - Additional inline styles
  */
 export function Cursor({
-    input = false,
-    inputLength, 
-    blink = false,
-    hidden = false,
-    style = {},
+  input = false,
+  inputLength,
+  blink = false,
+  hidden = false,
+  style = {},
 }) {
-    return (
-        <span
-            className={`cursor-block ${blink ? 'cursor-blink' : ''}`}
-            style={{
-                pointerEvents: 'none',
-                display: hidden ? 'none' : 'inline-block' ,
-                ...(input && {
-                    position: 'absolute',
-                    left: `${inputLength ? inputLength : 0}ch`,
-                    top: 0,
-                }),
-                ...style,
-            }}
-        >
-            {'\u2588'}
-        </span>
-    )
+  return (
+    <span
+      className={`cursor-block ${blink ? "cursor-blink" : ""}`}
+      style={{
+        pointerEvents: "none",
+        display: hidden ? "none" : "inline-block",
+        ...(input && {
+          position: "absolute",
+          left: `${inputLength ? inputLength : 0}ch`,
+          top: 0,
+        }),
+        ...style,
+      }}
+    >
+      {"\u2588"}
+    </span>
+  );
 }
