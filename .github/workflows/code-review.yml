@@ -26,6 +26,9 @@ jobs:
       - name: Perfom Code Review with Google Gemini
         id: code_review_suggestions
         run: |
+          # Echo
+          echo Prompt: \"${{ secrets.CODE_REVIEW_PROMPT }}\"
+
           # Get the code changes
           changed_code=$(cat ${{steps.git-diff.outputs.raw-diff-path}})
 
