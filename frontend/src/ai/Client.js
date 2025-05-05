@@ -16,8 +16,8 @@ export default class Client {
       });
       const data = await res.json();
 
-      // Add the command and response to the message history
-      this.messageHistory.push({ role: "user", content: data.commandPrompt });
+      // Add the user prompt and system response to the message history
+      this.messageHistory.push({ role: "user", content: data.prompt });
       this.messageHistory.push({
         role: "assistant",
         content: data.response.join("\n"),
