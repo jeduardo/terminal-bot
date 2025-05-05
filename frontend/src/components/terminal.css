@@ -1,0 +1,73 @@
+@keyframes blink-cursor {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.terminal-screen {
+  display: flex;
+  background: transparent;
+  flex-direction: column; /* ensure the contents are stacked */
+  font-family: monospace;
+}
+
+.terminal-line {
+  display: block;
+  background: transparent;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.terminal-input-container {
+  display: flex;
+  background: transparent;
+  font-family: monospace;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.terminal-input-prompt {
+  flex: 0 0 auto;
+  background: transparent;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.terminal-cursor {
+  flex: 0 0 auto;
+  font-family: monospace;
+}
+
+.terminal-cursor-blink {
+  animation:
+    textShadow 1.6s infinite,
+    blink-cursor 1s steps(1) infinite;
+}
+
+.terminal-cursor-hidden {
+  visibility: hidden;
+  animation: none;
+}
+
+.terminal-input-content {
+  flex: 0 0 auto;
+  background: transparent;
+  font-family: monospace; /* Need to force the font here otherwise the size will end up wrong */
+  width: 1px; /* will be overridden by JS */
+  min-width: 0ch;
+  box-sizing: content-box;
+  outline: none;
+  caret-color: transparent; /* Disable caret */
+  padding: 0;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-x: hidden;
+  border: none;
+}

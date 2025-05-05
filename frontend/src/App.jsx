@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 
-import { Cursor } from "./components/Cursor";
+import Terminal from "./components/Terminal";
 
 export default function App() {
   const [lines, setLines] = useState([]);
@@ -28,26 +28,6 @@ export default function App() {
   useEffect(() => {
     terminalEnd.current?.scrollIntoView({ behavior: "smooth" });
   }, [lines]);
-
-  // Display all messages as streaming messages
-  async function streamMessage(message, speed = 30) {
-    const messageIdx = await new Promise((resolve) => {
-      setLines((prev) => {
-        resolve(prev.length);
-        return [...prev, ""];
-      });
-    });
-
-    for (const ch of message) {
-      await new Promise((r) => setTimeout(r, speed));
-      setLines((prev) => {
-        const copy = [...prev];
-        copy[messageIdx] = (copy[messageIdx] ?? "") + ch;
-        return copy;
-      });
-    }
-    return messageIdx;
-  }
 
   // Modified boot sequence
   useEffect(() => {
@@ -129,10 +109,6 @@ export default function App() {
 
   // Modified AI response handling
   async function getCommandResponse(commandPrompt, command) {
-    // Show blinking cursor while waiting for response
-    setLines((prev) => [...prev, ""]);
-    setIsProcessing(true);
-
     let res;
     try {
       res = await fetch("/api/system", {
@@ -186,95 +162,12 @@ export default function App() {
     inputRef.current?.focus();
   }
 
-  // On Enter: echo → loader/API → show prompt again
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input) return;
-
-    // Hide the form immediately
-    if (formRef.current) {
-      formRef.current.style.visibility = "hidden";
-    }
-
-    setIsStreaming(true);
-    setLines((prev) => [...prev, commandPrompt + input]);
-    const msg = input;
-    setInput("");
-    await getCommandResponse(commandPrompt, msg);
-    setIsStreaming(false);
-
-    // Show the form again after processing
-    if (formRef.current) {
-      formRef.current.style.visibility = "visible";
-      // Focus input after form becomes visible
-      inputRef.current?.focus();
-    }
-  };
-
   return (
     <div className="crt">
-      <div className="terminal">
-        {lines.map((line, i) => {
-          const isLastLine = i === lines.length - 1;
-          const isEmptyLine = line === "";
-
-          // Show the cursor when:
-          // - it is the last line AND it is streaming text
-          // - it is the last line AND it is processing
-          const showCursor = isLastLine && (isStreaming || isProcessing);
-
-          // Show empty line character when:
-          // - line is empty AND
-          // - ((not the last line) OR (last line AND not streaming AND not processing))
-          const showEmptyLine =
-            isEmptyLine &&
-            (!isLastLine || (isLastLine && !isStreaming && !isProcessing));
-
-          return (
-            <pre
-              key={i}
-              className="terminal-line"
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <span style={{ whiteSpace: "pre" }}>
-                {showEmptyLine ? "\u00A0" : line}
-                <Cursor hidden={!showCursor} blink={isProcessing} />
-              </span>
-            </pre>
-          );
-        })}
-
-        {/* show only after boot AND when not streaming */}
-        {bootComplete && (
-          <form
-            ref={formRef}
-            onSubmit={handleSubmit}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              visibility: isStreaming ? "hidden" : "visible", // <-- Hide when streaming
-            }}
-          >
-            <span style={{ whiteSpace: "pre" }}>{commandPrompt}</span>
-            <div style={{ position: "relative", flex: 1, minWidth: 0 }}>
-              <input
-                ref={inputRef}
-                className="terminal-input"
-                autoFocus
-                value={input}
-                autoCapitalize="none"
-                autoCorrect="false"
-                spellCheck="false"
-                autoComplete="off"
-                onChange={(e) => setInput(e.target.value)}
-              />
-              <Cursor blink={true} input={true} inputLength={input.length} />
-            </div>
-          </form>
-        )}
-
-        <div ref={terminalEnd} />
-      </div>
+      <Terminal
+        commandPrompt={commandPrompt}
+        inputHandler={getCommandResponse}
+      />
       {/* Vercel-specific metric collectors */}
       <Analytics />
       <SpeedInsights />

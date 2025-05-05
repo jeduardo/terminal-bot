@@ -10,7 +10,7 @@
  * @param {boolean} [props.inputLength] - Length of the input preceding the cursor
  * @param {React.CSSProperties} [props.style] - Additional inline styles
  */
-export function Cursor({
+export default function Cursor({
   input = false,
   inputLength,
   blink = false,
