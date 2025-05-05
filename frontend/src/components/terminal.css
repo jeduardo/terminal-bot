@@ -9,24 +9,28 @@
   }
 }
 
+.terminal {
+  padding: 10px;
+  font-family: var(--terminal-font-family, monospace);
+  font-size: var(--terminal-font-size, 1.1rem);
+  color: var(--terminal-color, lightgreen);
+}
+
 .terminal-screen {
   display: flex;
   background: transparent;
   flex-direction: column; /* ensure the contents are stacked */
-  font-family: monospace;
 }
 
 .terminal-line {
   display: block;
   background: transparent;
-  font-family: monospace;
   white-space: pre;
 }
 
 .terminal-input-container {
   display: flex;
   background: transparent;
-  font-family: monospace;
   width: 100%;
   align-items: flex-start;
 }
@@ -34,13 +38,11 @@
 .terminal-input-prompt {
   flex: 0 0 auto;
   background: transparent;
-  font-family: monospace;
   white-space: pre-wrap;
 }
 
 .terminal-cursor {
   flex: 0 0 auto;
-  font-family: monospace;
 }
 
 .terminal-cursor-blink {
@@ -57,7 +59,11 @@
 .terminal-input-content {
   flex: 0 0 auto;
   background: transparent;
-  font-family: monospace; /* Need to force the font here otherwise the size will end up wrong */
+  /* Need to force the configuration here otherwise the color, font, and size will be wrong. */
+  font-family: var(--terminal-font-family, monospace);
+  font-size: var(--terminal-font-size, 1.2rem);
+  color: var(--terminal-color, lightgreen);
+  height: 100%;
   width: 1px; /* will be overridden by JS */
   min-width: 0ch;
   box-sizing: content-box;
