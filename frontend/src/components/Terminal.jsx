@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./terminal.css";
 
+/**
+ * Input component for the terminal.
+ * Handles user input and displays the prompt.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.commandPrompt - The current prompt displayed in the terminal.
+ * @param {Function} props.handler - The handler function for processing user input.
+ * @returns {JSX.Element} The rendered Input component.
+ */
 export function Input({ commandPrompt = "C:\\> ", handler }) {
   const [prompt, _] = useState(commandPrompt);
   const [content, setContent] = useState("");
@@ -25,6 +34,12 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
     };
   }, []);
 
+  /**
+   * Handler function for form submission.
+   * Processes the user input and calls the provided handler function.
+   *
+   * @param {Event} e - The form submission event.
+   */
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -87,6 +102,15 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
   );
 }
 
+/**
+ * Screen component for the terminal.
+ * Displays the content of the terminal and handles the cursor.
+ *
+ * @param {Object} props - The component props.
+ * @param {string[]} props.content - The lines of content to display in the terminal.
+ * @param {boolean} props.processing - Whether the terminal is currently processing input.
+ * @returns {JSX.Element} The rendered Screen component.
+ */
 export function Screen({ content = [""], processing = false }) {
   return (
     <div className="terminal-screen">
@@ -111,13 +135,31 @@ export function Screen({ content = [""], processing = false }) {
   );
 }
 
-// Helper to normalize the prompt ending
+/**
+ * Helper function to normalize the prompt ending.
+ *
+ * @param {string} prompt - The prompt to normalize.
+ * @returns {string} The normalized prompt.
+ */
 function normalizePrompt(prompt) {
   if (!prompt) return "C:\\> ";
   let trimmed = prompt.replace(/[\s>]+$/, "");
   return trimmed + "> ";
 }
 
+/**
+ * Terminal component that renders the terminal interface.
+ * Handles user input, displays content, and manages the boot sequence.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.initialPrompt - The initial prompt displayed in the terminal.
+ * @param {Function} props.inputHandler - The handler function for processing user input.
+ * @param {Function} props.promptNormalizer - The function to normalize the prompt.
+ * @param {boolean} props.echoPrompt - Whether to echo the prompt in the terminal.
+ * @param {boolean} props.echoCommand - Whether to echo the command in the terminal.
+ * @param {Function} props.bootHandler - The handler function for the boot sequence.
+ * @returns {JSX.Element} The rendered Terminal component.
+ */
 export default function Terminal({
   initialPrompt = "C:\\> ",
   inputHandler,
@@ -135,7 +177,7 @@ export default function Terminal({
   const booted = useRef(null);
   const terminalEnd = useRef(null);
 
-  // Auto‑scroll on new lines
+  // Auto-scroll on new lines
   useEffect(() => {
     terminalEnd.current?.scrollIntoView({ behavior: "smooth" });
   }, [lines]);
@@ -166,6 +208,14 @@ export default function Terminal({
     init();
   }, []);
 
+  /**
+   * Handler function for processing user input.
+   * Adds the input to the terminal and calls the provided input handler function.
+   *
+   * @param {string} commandPrompt - The current prompt displayed in the terminal.
+   * @param {string} input - The user input to be processed.
+   * @returns {Promise<void>} A promise that resolves when the input is processed.
+   */
   async function process(commandPrompt, input) {
     return new Promise(async (resolve) => {
       // Add the prompt line and a new line for processing immediately
@@ -188,12 +238,26 @@ export default function Terminal({
     });
   }
 
+  /**
+   * Helper function to display lines in the terminal.
+   *
+   * @param {string[]} lines - The lines to display in the terminal.
+   * @returns {Promise<void>} A promise that resolves when the lines are displayed.
+   */
   async function displayLines(lines) {
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       await streamLine(lines[lineIndex], lineIndex);
     }
   }
 
+  /**
+   * Helper function to stream a line of text in the terminal.
+   *
+   * @param {string} line - The line of text to stream.
+   * @param {number} lineIndex - The index of the line in the terminal.
+   * @param {number} delay - The delay between each character.
+   * @returns {Promise<void>} A promise that resolves when the line is streamed.
+   */
   async function streamLine(line, lineIndex, delay = 30) {
     let currentLine = "";
     // Add an empty line to force a blinking cursor and prepare
