@@ -1,8 +1,24 @@
+/**
+ * Client class for interacting with the backend API to fetch command responses and boot messages.
+ */
 export default class Client {
+  /**
+   * Constructor initializes an empty message history array.
+   */
   constructor() {
     this.messageHistory = [];
   }
 
+  /**
+   * Sends a user command to the backend API and retrieves the response.
+   *
+   * It uses the structure command + currentPrompt + history defined by the backend.
+   *
+   * @param {string} prompt - The current prompt or command input from the user.
+   * @param {string} command - The command to be executed.
+   * @returns {Promise<Object>} - An object containing the command prompt and response lines.
+   * @throws {Error} - If the fetch request fails, returns an error message.
+   */
   getCommandResponse = async (prompt, command) => {
     try {
       const res = await fetch("/api/system", {
@@ -32,6 +48,12 @@ export default class Client {
     }
   };
 
+  /**
+   * Fetches boot messages from the backend API.
+   *
+   * @returns {Promise<Object>} - An object containing the command prompt and boot messages.
+   * @throws {Error} - If the fetch request fails, returns an error message.
+   */
   getBootMessages = async () => {
     try {
       const res = await fetch("/api/boot", {
@@ -49,7 +71,6 @@ export default class Client {
 
       return { prompt: data.commandPrompt, lines: data.response };
     } catch (err) {
-      console.log(err);
       return {
         prompt: "C:\\> ",
         lines: [err.message],
