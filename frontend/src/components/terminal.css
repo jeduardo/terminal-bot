@@ -1,0 +1,79 @@
+@keyframes blink-cursor {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.terminal {
+  padding: 10px;
+  font-family: var(--terminal-font-family, monospace);
+  font-size: var(--terminal-font-size, 1.1rem);
+  color: var(--terminal-color, lightgreen);
+}
+
+.terminal-screen {
+  display: flex;
+  background: transparent;
+  flex-direction: column; /* ensure the contents are stacked */
+}
+
+.terminal-line {
+  display: block;
+  background: transparent;
+  white-space: pre;
+}
+
+.terminal-input-container {
+  display: flex;
+  background: transparent;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.terminal-input-prompt {
+  flex: 0 0 auto;
+  background: transparent;
+  white-space: pre-wrap;
+}
+
+.terminal-cursor {
+  flex: 0 0 auto;
+}
+
+.terminal-cursor-blink {
+  animation:
+    textShadow 1.6s infinite,
+    blink-cursor 1s steps(1) infinite;
+}
+
+.terminal-cursor-hidden {
+  visibility: hidden;
+  animation: none;
+}
+
+.terminal-input-content {
+  flex: 0 0 auto;
+  background: transparent;
+  /* Need to force the configuration here otherwise the color, font, and size will be wrong. */
+  font-family: var(--terminal-font-family, monospace);
+  font-size: var(--terminal-font-size, 1.2rem);
+  color: var(--terminal-color, lightgreen);
+  height: 100%;
+  width: 1px; /* will be overridden by JS */
+  min-width: 0ch;
+  box-sizing: content-box;
+  outline: none;
+  caret-color: transparent; /* Disable caret */
+  padding: 0;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-x: hidden;
+  border: none;
+}
