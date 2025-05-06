@@ -14,9 +14,12 @@
   "scripts": {
     "start": "node server.js",
     "format": "prettier --write \"**/*.{js,json,md}\"",
-    "format:check": "prettier --check \"**/*.{js,json,md}\""
+    "format:check": "prettier --check \"**/*.{js,json,md}\"",
+    "test": "vitest run"
   },
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "supertest": "^7.1.0",
+    "vitest": "^3.1.3"
   }
 }

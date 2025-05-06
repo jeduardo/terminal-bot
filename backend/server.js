@@ -9,10 +9,12 @@ import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { z } from "zod";
 
+// Load environment variables from .env file
 dotenv.config({
   path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env",
 });
 
+// Configuration variables from environment
 const MODEL = `${process.env.MODEL_NAME}`;
 const MODEL_PROMPT = `${process.env.MODEL_PROMPT}`.replaceAll("\n", " ");
 const BOOT_PROMPT = `${process.env.BOOT_PROMPT}`.replaceAll("\n", " ");
@@ -20,28 +22,37 @@ const FRONTEND_DIR = `${process.env.FRONTEND_DIR}`;
 const TEMPERATURE = parseFloat(process.env.MODEL_TEMPERATURE);
 const MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS);
 
+// Define the schema for the response object
 const RESPONSE_SCHEMA = z.object({
   commandPrompt: z.string(),
   response: z.array(z.string()),
 });
 
+// Initialize Express app
 const app = express();
 app.set("trust proxy", true);
-app.use(morgan("combined"));
-app.use(cors());
-app.use(express.json());
+app.use(morgan("combined")); // Log HTTP requests
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse JSON request bodies
 
+// Log configuration details
 console.log(`🤖 Model name: ${MODEL}`);
 console.log(`💬 Model prompt: "${MODEL_PROMPT}"`);
 console.log(`💬 Boot prompt: "${BOOT_PROMPT}"`);
 console.log(`🌡️ Model temperature: "${TEMPERATURE}"`);
 console.log(`📓 Max response tokens: "${MAX_TOKENS}"`);
 
+// Serve static files if FRONTEND_DIR is defined
 if (FRONTEND_DIR !== "undefined") {
   app.use(express.static(FRONTEND_DIR));
   console.log(`🌎 Frontend app served from: "${FRONTEND_DIR}"`);
 }
 
+/**
+ * Endpoint to initialize the AI model with a boot prompt.
+ * @route GET /api/boot
+ * @returns {Object} The generated object from the AI model.
+ */
 app.get("/api/boot", async (_, res) => {
   try {
     const { object } = await generateObject({
@@ -59,6 +70,14 @@ app.get("/api/boot", async (_, res) => {
   }
 });
 
+/**
+ * Endpoint to process a command with the AI model.
+ * @route POST /api/system
+ * @param {string} command - The command to be processed.
+ * @param {Array} history - The history of messages.
+ * @param {string} currentPrompt - The current prompt for the command.
+ * @returns {Object} The generated object from the AI model.
+ */
 app.post("/api/system", async (req, res) => {
   const { command, history, currentPrompt } = req.body;
   let retries = 0;
@@ -107,6 +126,7 @@ app.post("/api/system", async (req, res) => {
   }
 });
 
+// Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`🚀 Server listening on http://localhost:${PORT}`);
