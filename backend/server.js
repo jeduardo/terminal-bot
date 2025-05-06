@@ -13,6 +13,8 @@ dotenv.config({
   path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env",
 });
 
+const FAKE_SECRET_KEY = "hardcoded_secret";
+
 const MODEL = `${process.env.MODEL_NAME}`;
 const MODEL_PROMPT = `${process.env.MODEL_PROMPT}`.replaceAll("\n", " ");
 const BOOT_PROMPT = `${process.env.BOOT_PROMPT}`.replaceAll("\n", " ");
