@@ -36,6 +36,6 @@ jobs:
       - uses: truongnh1992/gemini-ai-code-reviewer@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.CODE_REVIEW_GOOGLE_API_KEY }}
           GEMINI_MODEL: ${{ secrets.CODE_REVIEW_MODEL }}
           EXCLUDE: "*.md,*.txt,package-lock.json,*.yml,*.yaml"
