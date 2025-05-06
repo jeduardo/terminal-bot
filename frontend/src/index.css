@@ -5,17 +5,6 @@
   font-style: normal;
 }
 
-@keyframes blink-cursor {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
 @keyframes textShadow {
   0% {
     text-shadow:
@@ -212,7 +201,7 @@
 }
 
 :root {
-  --terminal-text: lightgreen;
+  --terminal-color: lightgreen;
   --terminal-bg: black;
   --terminal-font-size: 1.2rem;
   --terminal-font-family: "FSEX300", monospace;
@@ -232,16 +221,20 @@ html,
   padding: 0;
   height: 100%;
   background: var(--terminal-bg);
-  color: var(--terminal-text);
+  color: var(--terminal-color);
   font-family: var(--terminal-font-family);
   font-size: var(--terminal-font-size);
 }
 
-/* Add a subtle glow to all text */
+/* Add a subtle glow to all text from the screen and
+the terminal component */
 .crt,
-.crt .terminal,
+.crt .terminal-screen,
 .crt .terminal-line,
 .crt .terminal-input,
+.crt .terminal-input-container,
+.crt .terminal-input-prompt,
+.crt .terminal-input-content,
 .crt {
   animation: textShadow 1.6s infinite;
 }
@@ -291,66 +284,4 @@ html,
   z-index: 2;
   pointer-events: none;
   animation: flicker 0.15s infinite;
-}
-
-.terminal {
-  padding: 10px;
-  box-sizing: border-box;
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  width: 100%;
-}
-
-.terminal input {
-  font-size: var(--terminal-font-size);
-  font-family: var(--terminal-font-family);
-  background: var(--terminal-bg);
-  color: var(--terminal-text);
-  border: none;
-  outline: none;
-  width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-.terminal-line {
-  font-family: var(--terminal-font-family);
-  white-space: pre-wrap; /* Allow text wrapping */
-  margin: 0;
-  word-break: break-all; /* Break long words */
-  max-width: 100%; /* Ensure content doesn't exceed container */
-}
-
-.cursor-block {
-  width: 0.7em;
-  height: var(--terminal-font-size);
-  color: var(--terminal-text);
-  font-family: var(--terminal-font-family);
-  font-size: var(--terminal-font-size);
-  line-height: 1;
-  vertical-align: bottom;
-}
-
-.cursor-blink {
-  animation:
-    textShadow 1.6s infinite,
-    blink-cursor 1s steps(1) infinite;
-}
-
-.terminal-input,
-.terminal input {
-  caret-color: transparent;
-  background: var(--terminal-bg);
-  color: var(--terminal-text);
-  border: none;
-  outline: none;
-  font-size: var(--terminal-font-size);
-  font-family: var(--terminal-font-family);
-  flex: 1;
-  min-width: 0;
-  width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  padding: 0;
-  margin: 0;
-  text-decoration: "none";
 }
