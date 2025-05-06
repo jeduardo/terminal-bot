@@ -34,8 +34,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: truongnh1992/gemini-ai-code-reviewer@main
+        env:
+          INPUT_EXCLUDE: "frontend/*.md,frontend/package-lock.json,backend/*.md,backend/package-lock.json"
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.CODE_REVIEW_GOOGLE_API_KEY }}
           GEMINI_MODEL: ${{ secrets.CODE_REVIEW_MODEL }}
-          EXCLUDE: "frontend/*.md,frontend/package-lock.json,backend/*.md,backend/package-lock.json"
