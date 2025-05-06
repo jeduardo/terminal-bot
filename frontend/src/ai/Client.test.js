@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import Client from "./Client";
 
 describe("Client", () => {
@@ -5,11 +6,11 @@ describe("Client", () => {
 
   beforeEach(() => {
     client = new Client();
-    global.fetch = jest.fn();
+    global.fetch = vi.fn();
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("getCommandResponse", () => {
@@ -21,7 +22,7 @@ describe("Client", () => {
       };
 
       global.fetch.mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
+        json: vi.fn().mockResolvedValueOnce(mockResponse),
       });
 
       const result = await client.getCommandResponse(
@@ -65,7 +66,7 @@ describe("Client", () => {
       };
 
       global.fetch.mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
+        json: vi.fn().mockResolvedValueOnce(mockResponse),
       });
 
       const result = await client.getBootMessages();

@@ -1,6 +1,7 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import Terminal from "./Terminal";
 
 // Mock scrollIntoView to prevent errors during testing as jsdom does not implement it
@@ -8,17 +9,17 @@ import Terminal from "./Terminal";
 window.HTMLElement.prototype.scrollIntoView = function () {};
 
 describe("Terminal Component", () => {
-  const mockInputHandler = jest.fn().mockResolvedValue({
+  const mockInputHandler = vi.fn().mockResolvedValue({
     prompt: "TerminalPrompt",
     lines: ["Response line 1", "Response line 2"],
   });
-  const mockBootHandler = jest.fn().mockResolvedValue({
+  const mockBootHandler = vi.fn().mockResolvedValue({
     prompt: "TerminalPrompt",
     lines: ["Boot message 1", "Boot message 2"],
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("renders the terminal with initial prompt", async () => {
