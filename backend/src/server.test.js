@@ -51,7 +51,12 @@ describe("API Endpoints", () => {
       const response = await request(app).get("/api/boot");
 
       expect(response.status).toBe(500);
-      expect(response.text).toBe("AI request failed");
+      expect(response.text).toBe(
+        JSON.stringify({
+          commandPrompt: "C:\\> ",
+          response: ["Failure", "AI request failed"],
+        }),
+      );
     });
   });
 
@@ -100,7 +105,12 @@ describe("API Endpoints", () => {
         });
 
       expect(response.status).toBe(500);
-      expect(response.text).toBe("AI request failed");
+      expect(response.text).toBe(
+        JSON.stringify({
+          commandPrompt: "C:\\> ",
+          response: ["Failure", "AI request failed"],
+        }),
+      );
     });
 
     it("should retry on NoObjectGeneratedError and eventually fail", async () => {
@@ -122,7 +132,12 @@ describe("API Endpoints", () => {
         });
 
       expect(response.status).toBe(500);
-      expect(response.text).toBe("AI request failed");
+      expect(response.text).toBe(
+        JSON.stringify({
+          commandPrompt: "C:\\> ",
+          response: ["Failure", "NoObjectGeneratedError"],
+        }),
+      );
       expect(generateObject).toHaveBeenCalledTimes(5);
     });
   });
