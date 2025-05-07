@@ -1,5 +1,7 @@
 # Terminal Bot
 
+[![codecov](https://codecov.io/gh/jeduardo/terminal-bot/graph/badge.svg?token=5L0A8MZCBW)](https://codecov.io/gh/jeduardo/terminal-bot)
+
 Terminal Bot is a simulation of a DOS session using the Gemini LLM models from Google.
 
 ## Project Structure
