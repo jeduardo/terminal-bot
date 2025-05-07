@@ -32,7 +32,7 @@ router.get("/api/boot", async (_, res) => {
     console.error("🚨 AI request failed", err);
     const error = {
       commandPrompt: "C:\\> ",
-      response: ["Failure", err.message],
+      response: ["AI request failed"],
     };
     res.status(500).send(error);
   }
@@ -82,7 +82,7 @@ router.post("/api/system", async (req, res) => {
       console.error("🚨 AI request failed", err);
       const error = {
         commandPrompt: "C:\\> ",
-        response: ["Failure", err.message],
+        response: ["AI request failed"],
       };
       return res.status(500).send(error);
     }

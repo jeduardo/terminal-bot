@@ -54,7 +54,7 @@ describe("API Endpoints", () => {
       expect(response.text).toBe(
         JSON.stringify({
           commandPrompt: "C:\\> ",
-          response: ["Failure", "AI request failed"],
+          response: ["AI request failed"],
         }),
       );
     });
@@ -108,7 +108,7 @@ describe("API Endpoints", () => {
       expect(response.text).toBe(
         JSON.stringify({
           commandPrompt: "C:\\> ",
-          response: ["Failure", "AI request failed"],
+          response: ["AI request failed"],
         }),
       );
     });
@@ -135,7 +135,7 @@ describe("API Endpoints", () => {
       expect(response.text).toBe(
         JSON.stringify({
           commandPrompt: "C:\\> ",
-          response: ["Failure", "NoObjectGeneratedError"],
+          response: ["AI request failed"],
         }),
       );
       expect(generateObject).toHaveBeenCalledTimes(5);
