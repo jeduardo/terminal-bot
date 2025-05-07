@@ -30,9 +30,17 @@ jobs:
         working-directory: ${{ matrix.project }}
         run: npm run coverage
 
-      - name: ${{ matrix.project }} - upload coverage to Codecov
+      - name: ${{ matrix.project }} - upload coverage results to Codecov
         uses: codecov/codecov-action@v5
         with:
-          files: ./${{ matrix.project }}/coverage/coverage-final.json
+          files: ./${{ matrix.project }}/reports/coverage-final.json
+          flags: ${{ matrix.project }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: ${{ matrix.project }} - upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./${{ matrix.project }}/reports/test-report.junit.xml
           flags: ${{ matrix.project }}
           token: ${{ secrets.CODECOV_TOKEN }}
