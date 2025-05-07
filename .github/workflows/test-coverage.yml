@@ -1,0 +1,38 @@
+name: Run tests and upload coverage
+
+on: push
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        project: [frontend, backend]
+    name: Run tests and collect coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+
+      - name: ${{ matrix.project }} install dependencies
+        working-directory: ${{ matrix.project }}
+        run: npm ci
+
+      - name: ${{ matrix.project }} - run tests
+        working-directory: ${{ matrix.project }}
+        run: npm run coverage
+
+      - name: ${{ matrix.project }} - upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./${{ matrix.project }}/coverage/coverage-final.json
+          flags: ${{ matrix.project }}
+          token: ${{ secrets.CODECOV_TOKEN }}
