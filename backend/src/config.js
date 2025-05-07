@@ -23,10 +23,14 @@ export const MODEL_PROMPT = env.MODEL_PROMPT.replaceAll("\n", " ");
 export const BOOT_PROMPT = env.BOOT_PROMPT.replaceAll("\n", " ");
 export const TEMPERATURE = env.MODEL_TEMPERATURE;
 export const MAX_TOKENS = env.MODEL_MAX_TOKENS;
+export const REMOTE_CALL_TIMEOUT = env.REMOTE_CALL_TIMEOUT
+  ? parseInt(env.REMOTE_CALL_TIMEOUT)
+  : 50000;
 
 // Log configuration details
 console.log(`🤖 Model name: ${MODEL}`);
 console.log(`💬 Model prompt: "${MODEL_PROMPT}"`);
 console.log(`💬 Boot prompt: "${BOOT_PROMPT}"`);
-console.log(`🌡️ Model temperature: "${TEMPERATURE}"`);
-console.log(`📓 Max response tokens: "${MAX_TOKENS}"`);
+console.log(`🌡️ Model temperature: ${TEMPERATURE}`);
+console.log(`📓 Max response tokens: ${MAX_TOKENS}`);
+console.log(`⏰ Remote call timeout: ${REMOTE_CALL_TIMEOUT}`);

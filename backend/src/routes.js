@@ -8,6 +8,7 @@ import {
   BOOT_PROMPT,
   TEMPERATURE,
   MAX_TOKENS,
+  REMOTE_CALL_TIMEOUT,
 } from "./config.js";
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router.get("/api/boot", async (_, res) => {
       schema: RESPONSE_SCHEMA,
       maxRetries: 5,
       prompt: BOOT_PROMPT,
+      abortSignal: AbortSignal.timeout(REMOTE_CALL_TIMEOUT),
     });
     res.status(200).send(object);
   } catch (err) {
@@ -60,6 +62,7 @@ router.post("/api/system", async (req, res) => {
         maxTokens: MAX_TOKENS,
         schema: RESPONSE_SCHEMA,
         maxRetries: 5,
+        abortSignal: AbortSignal.timeout(REMOTE_CALL_TIMEOUT),
         messages: [
           { role: "system", content: MODEL_PROMPT },
           {

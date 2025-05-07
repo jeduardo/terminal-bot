@@ -41,6 +41,7 @@ describe("API Endpoints", () => {
         maxTokens: MAX_TOKENS,
         schema: expect.any(Object),
         maxRetries: 5,
+        abortSignal: expect.any(Object),
         prompt: BOOT_PROMPT,
       });
     });
@@ -81,6 +82,7 @@ describe("API Endpoints", () => {
         maxTokens: MAX_TOKENS,
         schema: expect.any(Object),
         maxRetries: 5,
+        abortSignal: expect.any(Object),
         messages: [
           { role: "system", content: MODEL_PROMPT },
           {
