@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import Terminal from "./Terminal";
@@ -48,5 +49,29 @@ describe("Terminal Component", () => {
       expect(screen.getByText("Boot message 2")).toBeInTheDocument();
       expect(mockBootHandler).toHaveBeenCalled();
     });
+  });
+
+  test("calls inputHandler when terminal input is processed", async () => {
+    const user = userEvent.setup();
+    render(
+      <Terminal
+        inputHandler={mockInputHandler}
+        bootHandler={mockBootHandler}
+      />,
+    );
+
+    // Simulate user input in the terminal
+    const input = await screen.findByRole("textbox", {
+      name: /terminal input/i,
+    });
+
+    await user.type(input, "test command"); // types each char
+    await user.keyboard("{Enter}"); // then presses Enter
+
+    expect(mockInputHandler).toHaveBeenCalledOnce();
+
+    // Wait for the inputHandler to resolve
+    await screen.findByText(/response line 2/i);
+    expect(screen.getByText(/response line 2/i)).toBeInTheDocument();
   });
 });
