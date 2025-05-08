@@ -36,7 +36,7 @@ describe("Client", () => {
       });
 
       expect(client.messageHistory).toEqual([
-        { role: "user", content: "test prompt" },
+        { role: "user", content: "test command" },
         { role: "assistant", content: "Response line 1\nResponse line 2" },
       ]);
     });
