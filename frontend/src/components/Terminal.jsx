@@ -78,6 +78,7 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
       <span className="terminal-input-prompt">{prompt}</span>
       <input
         id="terminal-input-content"
+        aria-label="Terminal input"
         ref={inputRef}
         className="terminal-input-content"
         autoFocus
