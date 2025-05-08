@@ -65,7 +65,8 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
   useEffect(() => {
     const input = inputRef.current;
     if (input) {
-      input.style.width = `${content.length}ch`;
+      const limit = commandPrompt.length + 1; // for cursor
+      input.style.width = `min(${content.length}ch, calc(100% - ${limit}ch))`;
     }
   }, [content]);
 
