@@ -13,7 +13,7 @@ import "./terminal.css";
 export function Input({ commandPrompt = "C:\\> ", handler }) {
   const [prompt, _] = useState(commandPrompt);
   const [content, setContent] = useState("");
-  const [isProcessingHandler, setIsProcessingHandler] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const inputRef = useRef(null);
 
   // Focus on the input whenever we click or focus the window
@@ -46,12 +46,12 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
     if (content.trim() === "") return;
 
     if (handler) {
-      setIsProcessingHandler(true);
+      setProcessing(true);
       setContent("");
       try {
         await handler(commandPrompt, content);
       } finally {
-        setIsProcessingHandler(false);
+        setProcessing(false);
       }
     }
 
@@ -88,14 +88,12 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
         autoCorrect="false"
         spellCheck="false"
         autoComplete="off"
-        disabled={isProcessingHandler}
+        disabled={processing}
         onChange={(e) => setContent(e.target.value)}
       />
       <span
         className={`terminal-cursor ${
-          !isProcessingHandler
-            ? " terminal-cursor-blink"
-            : "terminal-cursor-hidden"
+          !processing ? " terminal-cursor-blink" : "terminal-cursor-hidden"
         }`}
       >
         {"\u2588"}
