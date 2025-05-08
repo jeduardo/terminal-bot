@@ -111,9 +111,14 @@ export function Input({ commandPrompt = "C:\\> ", handler }) {
  * @param {Object} props - The component props.
  * @param {string[]} props.content - The lines of content to display in the terminal.
  * @param {boolean} props.processing - Whether the terminal is currently processing input.
+ * @param {boolean} props.rendering - Whether the terminal is rendering output.
  * @returns {JSX.Element} The rendered Screen component.
  */
-export function Screen({ content = [""], processing = false }) {
+export function Screen({
+  content = [""],
+  processing = false,
+  rendering = false,
+}) {
   return (
     <div className="terminal-screen">
       {content.map((line, i) => {
@@ -122,7 +127,7 @@ export function Screen({ content = [""], processing = false }) {
         if (!showCursor || (showCursor && !processing)) {
           cursorClass.push("terminal-cursor-hidden");
         }
-        if (processing) {
+        if (processing && !rendering) {
           cursorClass.push("terminal-cursor-blink");
         }
 
@@ -174,6 +179,7 @@ export default function Terminal({
 }) {
   const [lines, setLines] = useState([]);
   const [processing, setProcessing] = useState(false);
+  const [rendering, setRendering] = useState(false);
   const [commandPrompt, setCommandPrompt] = useState(initialPrompt);
   // Need to use a ref to control boot to avoid double calls
   const booted = useRef(null);
@@ -232,7 +238,9 @@ export default function Terminal({
       const res = await inputHandler(commandPrompt, input);
       const { prompt, lines } = res;
 
+      setRendering(true);
       await displayLines(lines);
+      setRendering(false);
       setCommandPrompt(promptNormalizer(prompt));
 
       setProcessing(false);
@@ -247,6 +255,7 @@ export default function Terminal({
    * @returns {Promise<void>} A promise that resolves when the lines are displayed.
    */
   async function displayLines(lines) {
+    // Stream each line in the terminal
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       await streamLine(lines[lineIndex], lineIndex);
     }
@@ -289,7 +298,7 @@ export default function Terminal({
 
   return (
     <div className="terminal">
-      <Screen content={lines} processing={processing} />
+      <Screen content={lines} processing={processing} rendering={rendering} />
       {/* only show the prompt if not processing */}
       {!processing && <Input handler={process} commandPrompt={commandPrompt} />}
       <div ref={terminalEnd} />
