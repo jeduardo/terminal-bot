@@ -26,6 +26,9 @@
   display: block;
   background: transparent;
   white-space: pre;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .terminal-input-container {
