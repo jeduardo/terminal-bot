@@ -42,7 +42,7 @@ describe("App component", () => {
 
   test("calls inputHandler when terminal input is processed", async () => {
     const user = userEvent.setup();
-    render(<App inputHandler={mockCommandResponse} />);
+    render(<App />);
 
     // Simulate user input in the terminal
     const input = await screen.findByRole("textbox", {
