@@ -14,8 +14,10 @@ jobs:
       contains(github.event.comment.body, '/gemini-review')
     steps:
       - name: PR Info
+        env:
+          COMMENT: ${{ github.event.comment.body }}
         run: |
-          echo "Comment: ${{ github.event.comment.body }}"
+          echo "Comment: $COMMENT"
           echo "Issue Number: ${{ github.event.issue.number }}"
           echo "Repository: ${{ github.repository }}"
 
