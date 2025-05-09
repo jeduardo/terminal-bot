@@ -1,13 +1,9 @@
 name: Run tests and upload coverage
 permissions:
   contents: read
-  pull-requests: write
+  statuses: write
 
 on: push
-
-permissions:
-  contents: read
-  statuses: write
 
 jobs:
   test:
