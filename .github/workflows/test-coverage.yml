@@ -2,6 +2,10 @@ name: Run tests and upload coverage
 
 on: push
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   test:
     strategy:
