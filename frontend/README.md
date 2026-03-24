@@ -19,7 +19,7 @@ This is the React-based frontend for the Terminal Bot project. It provides a use
 To run the frontend locally:
 
 ```bash
-npm start
+npm run dev
 ```
 
 This will start the development server at `http://localhost:3000`.
