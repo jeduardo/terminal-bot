@@ -21,10 +21,12 @@ const mockBootMessages = vi.fn().mockResolvedValue({
 
 vi.mock("./ai/Client", () => {
   return {
-    default: vi.fn(() => ({
-      getCommandResponse: mockCommandResponse,
-      getBootMessages: mockBootMessages,
-    })),
+    default: vi.fn(function MockClient() {
+      return {
+        getCommandResponse: mockCommandResponse,
+        getBootMessages: mockBootMessages,
+      };
+    }),
   };
 });
 
