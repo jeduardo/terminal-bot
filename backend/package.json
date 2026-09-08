@@ -4,8 +4,8 @@
   "type": "module",
   "main": "src/server.js",
   "dependencies": {
-    "@ai-sdk/google": "^2.0.5",
-    "ai": "^5.0.52",
+    "@ai-sdk/google": "^2.0.96",
+    "ai": "^5.0.253",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
