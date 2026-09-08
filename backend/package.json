@@ -23,6 +23,6 @@
     "@vitest/coverage-istanbul": "^4.1.10",
     "prettier": "^3.5.3",
     "supertest": "^7.1.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }
